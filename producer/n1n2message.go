@@ -365,6 +365,8 @@ func N1N2MessageTransferProcedure(ueContextID string, reqUri string,
 			if err != nil {
 				logger.NgapLog.Errorf("Build Paging failed : %s", err.Error())
 				return n1n2MessageTransferRspData, locationHeader, problemDetails, transferErr
+			} else {
+				logger.NgapLog.Info("---Build paging success---")
 			}
 			ngap_message.SendPaging(ue, pkg)
 		}
