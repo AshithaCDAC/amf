@@ -369,6 +369,7 @@ func N1N2MessageTransferProcedure(ueContextID string, reqUri string,
 				logger.NgapLog.Info("---Build paging success---")
 			}
 			ngap_message.SendPaging(ue, pkg)
+			logger.NgapLog.Info("---send paging---")
 		}
 		// TODO: WAITING_FOR_ASYNCHRONOUS_TRANSFER
 		return n1n2MessageTransferRspData, locationHeader, nil, nil

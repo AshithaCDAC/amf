@@ -83,6 +83,7 @@ func SendToRanUe(ue *context.RanUe, packet []byte) {
 	}
 
 	SendToRan(ran, packet)
+	logger.NgapLog.Info("---Path switch request Ack send to Ran---")
 }
 
 func NasSendToRan(ue *context.AmfUe, accessType models.AccessType, packet []byte) {
@@ -670,6 +671,7 @@ func SendPaging(ue *context.AmfUe, ngapBuf []byte) {
 				ue.GmmLog.Infof("Send Paging to TAI(%+v, Tac:%+v)",
 					item.Tai.PlmnId, item.Tai.Tac)
 				SendToRan(ran, ngapBuf)
+				logger.NgapLog.Info("---Send paging message to RAN---")
 				break
 			}
 		}
