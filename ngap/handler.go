@@ -3099,7 +3099,7 @@ func HandlePathSwitchRequest(ran *context.AmfRan, message *ngapType.NGAPPDU) {
 			if err != nil {
 				ranUe.Log.Errorf("SendUpdateSmContextXnHandover[PathSwitchRequestTransfer] Error:\n%s", err.Error())
 			} else {
-				ranUe.Log.Info("---SendUpdateSmcontextXnHandover Success---")
+				ranUe.Log.Info("----SendUpdateSmcontextXnHandover Success----")
 			}
 			if response != nil && response.BinaryDataN2SmInformation != nil {
 				pduSessionResourceSwitchedItem := ngapType.PDUSessionResourceSwitchedItem{}
