@@ -101,3 +101,4 @@ jobs:
 
       - name: Push Docker image to Docker Hub
         run: docker push ashithacdac/amf_docker_repo
+        
