@@ -269,8 +269,7 @@ func SendRegistrationAccept(
 	errPduSessionId, errCause []uint8,
 	pduSessionResourceSetupList *ngapType.PDUSessionResourceSetupListCxtReq,
 ) {
-	ue.GmmLog.Info("Send Registration Accept")
-	ue.GmmLog.Info("Trying Initial Context Request using")
+	ue.GmmLog.Info("Send Registration Accept + test log")
 	nasMsg, err := BuildRegistrationAccept(ue, anType, pDUSessionStatus, reactivationResult, errPduSessionId, errCause)
 	if err != nil {
 		ue.GmmLog.Error(err.Error())
