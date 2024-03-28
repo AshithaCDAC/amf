@@ -277,11 +277,14 @@ func SendRegistrationAccept(
 	}
 	ue.GmmLog.Info("Trying Initial Context Request using")
 	ue.GmmLog.Info(ue.RanUe[anType])
-	if ue.RanUe[anType].UeContextRequest {
-		ngap_message.SendInitialContextSetupRequest(ue, anType, nasMsg, pduSessionResourceSetupList, nil, nil, nil)
-	} else {
-		ue.GmmLog.Info("trying download nas transport")
-		ngap_message.SendDownlinkNasTransport(ue.RanUe[models.AccessType__3_GPP_ACCESS], nasMsg, nil)
+	if ue.RanUe[anType] != nil {
+		if ue.RanUe[anType].UeContextRequest {
+			ue.GmmLog.Info(ue.RanUe[anType].UeContextRequest)
+			ngap_message.SendInitialContextSetupRequest(ue, anType, nasMsg, pduSessionResourceSetupList, nil, nil, nil)
+		} else {
+			ue.GmmLog.Info("trying download nas transport")
+			ngap_message.SendDownlinkNasTransport(ue.RanUe[models.AccessType__3_GPP_ACCESS], nasMsg, nil)
+		}
 	}
 
 	if context.AMF_Self().T3550Cfg.Enable {
