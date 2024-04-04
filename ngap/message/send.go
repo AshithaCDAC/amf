@@ -83,6 +83,10 @@ func SendToRanUe(ue *context.RanUe, packet []byte) {
 	}
 
 	SendToRan(ran, packet)
+<<<<<<< HEAD
+=======
+	
+>>>>>>> a0af0eab5962864f84120ac4cb3ca5cae9809dc8
 }
 
 func NasSendToRan(ue *context.AmfUe, accessType models.AccessType, packet []byte) {
