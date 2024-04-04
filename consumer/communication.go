@@ -248,6 +248,7 @@ func RegistrationStatusUpdate(ue *amf_context.AmfUe, request models.UeRegStatusU
 	regStatusTransferComplete bool, problemDetails *models.ProblemDetails, err error,
 ) {
 	configuration := Namf_Communication.NewConfiguration()
+	logger.ConsumerLog.Infof("---Configuration value %v", configuration)
 	configuration.SetBasePath(ue.TargetAmfUri)
 	client := Namf_Communication.NewAPIClient(configuration)
 
