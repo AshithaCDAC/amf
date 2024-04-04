@@ -83,7 +83,7 @@ func SendToRanUe(ue *context.RanUe, packet []byte) {
 	}
 
 	SendToRan(ran, packet)
-	logger.NgapLog.Info("---Path switch request Ack send to Ran---")
+	//logger.NgapLog.Info("---Path switch request Ack send to Ran---")
 }
 
 func NasSendToRan(ue *context.AmfUe, accessType models.AccessType, packet []byte) {
