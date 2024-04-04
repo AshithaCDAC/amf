@@ -84,7 +84,6 @@ func SendToRanUe(ue *context.RanUe, packet []byte) {
 
 	SendToRan(ran, packet)
 	logger.NgapLog.Infof("--Send to Ran--")
-
 }
 
 func NasSendToRan(ue *context.AmfUe, accessType models.AccessType, packet []byte) {
