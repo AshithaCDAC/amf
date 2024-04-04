@@ -83,6 +83,7 @@ func SendToRanUe(ue *context.RanUe, packet []byte) {
 	}
 
 	SendToRan(ran, packet)
+	logger.NgapLog.Infof("---Send to Ran---")
 
 }
 
