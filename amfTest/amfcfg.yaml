@@ -102,20 +102,20 @@ logger:
     debugLevel: debug
     ReportCaller: false
   NAS:
-    debugLevel: info
+    debugLevel: debug
     ReportCaller: false
   FSM:
-    debugLevel: info
+    debugLevel: debug
     ReportCaller: false
   NGAP:
-    debugLevel: info
+    debugLevel: debug
     ReportCaller: false
   Aper:
-    debugLevel: info
+    debugLevel: debug
     ReportCaller: false
   PathUtil:
-    debugLevel: info
+    debugLevel: debug
     ReportCaller: false
   OpenApi:
-    debugLevel: info
+    debugLevel: debug
     ReportCaller: false
