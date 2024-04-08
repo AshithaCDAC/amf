@@ -1266,6 +1266,7 @@ func handleRequestedNssai(ue *context.AmfUe, anType models.AccessType) error {
 			if problemDetails != nil {
 				ue.GmmLog.Errorf("Registration Status Update Failed Problem[%+v]", problemDetails)
 			} else if err != nil {
+				ue.GmmLog.Info("---value of antype:", anType)
 				ue.GmmLog.Errorf("Registration Status Update Error[%+v]", err)
 			}
 
@@ -1302,6 +1303,7 @@ func handleRequestedNssai(ue *context.AmfUe, anType models.AccessType) error {
 			if err == nil {
 				// Condition (A) Step 7: initial AMF find Target AMF via NRF ->
 				// Send Namf_Communication_N1MessageNotify to Target AMF
+				ue.GmmLog.Info("---value of antype:", anType)
 				ueContext := consumer.BuildUeContextModel(ue)
 				registerContext := models.RegistrationContextContainer{
 					UeContext:        &ueContext,
