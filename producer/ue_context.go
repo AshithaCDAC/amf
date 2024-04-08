@@ -567,6 +567,7 @@ func AssignEbiDataProcedure(ueContextID string, assignEbiData models.AssignEbiDa
 // TS 29.518 5.2.2.2.2
 func HandleRegistrationStatusUpdateRequest(request *httpwrapper.Request) *httpwrapper.Response {
 	logger.CommLog.Info("Handle Registration Status Update Request")
+	logger.CommLog.Info("testing function call of HandleRegistrationStatusUpdateRequest")
 
 	ueRegStatusUpdateReqData := request.Body.(models.UeRegStatusUpdateReqData)
 	ueContextID := request.Params["ueContextId"]
@@ -595,6 +596,8 @@ func HandleRegistrationStatusUpdateRequest(request *httpwrapper.Request) *httpwr
 		ueRegStatusUpdateRspData = msg.RespData.(*models.UeRegStatusUpdateRspData)
 	}
 	// ueRegStatusUpdateRspData, problemDetails := RegistrationStatusUpdateProcedure(ueContextID, ueRegStatusUpdateReqData)
+	logger.CommLog.Info("---problemdetailstatus:", int(msg.ProblemDetails.(*models.ProblemDetails).Status))
+	logger.CommLog.Info("---problemdetails", msg.ProblemDetails.(*models.ProblemDetails))
 	if msg.ProblemDetails != nil {
 		logger.CommLog.Info("---problemdetailstatus:", int(msg.ProblemDetails.(*models.ProblemDetails).Status))
 		logger.CommLog.Info("---problemdetails", msg.ProblemDetails.(*models.ProblemDetails))
