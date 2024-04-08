@@ -637,6 +637,7 @@ func HandleInitialRegistration(ue *context.AmfUe, anType models.AccessType) erro
 		if problemDetails != nil {
 			ue.GmmLog.Errorf("Registration Status Update Failed Problem[%+v]", problemDetails)
 		} else if err != nil {
+			ue.GmmLog.Info("---value of ue", ue)
 			ue.GmmLog.Errorf("Registration Status Update Error[%+v]", err)
 		} else {
 			if regStatusTransferComplete {
