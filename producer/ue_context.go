@@ -597,7 +597,7 @@ func HandleRegistrationStatusUpdateRequest(request *httpwrapper.Request) *httpwr
 	}
 	// ueRegStatusUpdateRspData, problemDetails := RegistrationStatusUpdateProcedure(ueContextID, ueRegStatusUpdateReqData)
 	logger.CommLog.Infof("---problemdetailstatus: %d", int(msg.ProblemDetails.(*models.ProblemDetails).Status))
-	logger.CommLog.Infof("---problemdetails: %v", msg.ProblemDetails.(*models.ProblemDetails)))
+	logger.CommLog.Infof("---problemdetails: %v", msg.ProblemDetails.(*models.ProblemDetails))
 	if msg.ProblemDetails != nil {
 		logger.CommLog.Infof("---problemdetailstatus: %d", int(msg.ProblemDetails.(*models.ProblemDetails).Status))
 		logger.CommLog.Infof("---problemdetails: %v", msg.ProblemDetails.(*models.ProblemDetails))
