@@ -602,9 +602,9 @@ func HandleRegistrationStatusUpdateRequest(request *httpwrapper.Request) *httpwr
 	// logger.CommLog.Infof("---problemdetails: %v", msg.ProblemDetails.(*models.ProblemDetails))
 	if msg.ProblemDetails != nil {
 		logger.CommLog.Info("---testing the condition problemdetail nil---")
-		logger.CommLog.Info("----value of msg.problemdetail", msg.ProblemDetails)
+		logger.CommLog.Info("---value of msg.problemdetail", msg.ProblemDetails)
 		// var pd *models.ProblemDetails
-		var pd = msg.ProblemDetails.(*models.ProblemDetails)
+		pd := msg.ProblemDetails.(*models.ProblemDetails)
 		if pd != nil {
 			logger.CommLog.Info("---testing the condition models.problemdetails nil---")
 			logger.CommLog.Info("---problemdetailstatus:")
