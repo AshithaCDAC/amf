@@ -571,6 +571,7 @@ func HandleRegistrationStatusUpdateRequest(request *httpwrapper.Request) *httpwr
 
 	ueRegStatusUpdateReqData := request.Body.(models.UeRegStatusUpdateReqData)
 	ueContextID := request.Params["ueContextId"]
+	logger.CommLog.Infof("The Context ID for registration status update %s", ueContextID)
 
 	amfSelf := context.AMF_Self()
 
@@ -601,9 +602,21 @@ func HandleRegistrationStatusUpdateRequest(request *httpwrapper.Request) *httpwr
 	// logger.CommLog.Infof("---problemdetails: %v", msg.ProblemDetails.(*models.ProblemDetails))
 	if msg.ProblemDetails != nil {
 		logger.CommLog.Info("---testing the condition problemdetail nil---")
-		logger.CommLog.Info("---problemdetailstatus:")
-		logger.CommLog.Info(int(msg.ProblemDetails.(*models.ProblemDetails).Status))
-		logger.CommLog.Info("---problemdetails:", msg.ProblemDetails.(*models.ProblemDetails))
+		logger.CommLog.Info("---value of msg.problemdetail", msg.ProblemDetails)
+		// var pd *models.ProblemDetails
+		var pd = msg.ProblemDetails.(*models.ProblemDetails)
+		if pd != nil {
+			logger.CommLog.Info("---testing the condition models.problemdetails nil---")
+			logger.CommLog.Info("---problemdetailstatus:")
+			logger.CommLog.Info(int(msg.ProblemDetails.(*models.ProblemDetails).Status))
+			logger.CommLog.Info("---problemdetails:", msg.ProblemDetails.(*models.ProblemDetails))
+		} else {
+			problemDetails := &models.ProblemDetails{
+				Status: http.StatusNotFound,
+				Cause:  "CONTEXT_NOT_FOUND",
+			}
+			return httpwrapper.NewResponse(http.StatusForbidden, nil, problemDetails)
+		}
 		return httpwrapper.NewResponse(int(msg.ProblemDetails.(*models.ProblemDetails).Status), nil, msg.ProblemDetails.(*models.ProblemDetails))
 	} else {
 		return httpwrapper.NewResponse(http.StatusOK, nil, ueRegStatusUpdateRspData)
