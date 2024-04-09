@@ -600,7 +600,7 @@ func HandleRegistrationStatusUpdateRequest(request *httpwrapper.Request) *httpwr
 	//logger.CommLog.Infof("---problemdetailstatus: %d", int(msg.ProblemDetails.(*models.ProblemDetails).Status))
 	//logger.CommLog.Infof("---problemdetails: %v", msg.ProblemDetails.(*models.ProblemDetails))
 	if msg.ProblemDetails != nil {
-		logger.CommLog.Info("---testing---")
+		logger.CommLog.Info("---testing problemdetails nil---")
 		logger.CommLog.Info("---problemdetailstatus:", int(msg.ProblemDetails.(*models.ProblemDetails).Status))
 		logger.CommLog.Info("---problemdetails:", msg.ProblemDetails.(*models.ProblemDetails))
 		return httpwrapper.NewResponse(int(msg.ProblemDetails.(*models.ProblemDetails).Status), nil, msg.ProblemDetails.(*models.ProblemDetails))
