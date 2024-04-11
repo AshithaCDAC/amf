@@ -597,13 +597,16 @@ func HandleRegistrationStatusUpdateRequest(request *httpwrapper.Request) *httpwr
 		ueRegStatusUpdateRspData = msg.RespData.(*models.UeRegStatusUpdateRspData)
 	}
 	// ueRegStatusUpdateRspData, problemDetails := RegistrationStatusUpdateProcedure(ueContextID, ueRegStatusUpdateReqData)
-	// logger.CommLog.Info("---testing---")
 	// logger.CommLog.Infof("---problemdetailstatus: %d", int(msg.ProblemDetails.(*models.ProblemDetails).Status))
 	// logger.CommLog.Infof("---problemdetails: %v", msg.ProblemDetails.(*models.ProblemDetails))
+	logger.CommLog.Info("---value of msg.problemdetail", msg.ProblemDetails)
 	if msg.ProblemDetails != nil {
 		logger.CommLog.Info("---testing the condition problemdetail nil---")
-		logger.CommLog.Info("---value of msg.problemdetail", msg.ProblemDetails)
-		// var pd *models.ProblemDetails
+		// logger.CommLog.Info("---value of msg.problemdetail", msg.ProblemDetails)
+		logger.CommLog.Infof("---problemdetailstatus infof: %d", int(msg.ProblemDetails.(*models.ProblemDetails).Status))
+		logger.CommLog.Info("problemdeatilstatus info only:", int(msg.ProblemDetails.(*models.ProblemDetails).Status))
+		logger.CommLog.Infof("---problemdetails infof: %v", msg.ProblemDetails.(*models.ProblemDetails))
+		logger.CommLog.Info("---problemdetails info only:", msg.ProblemDetails.(*models.ProblemDetails))
 		pd := msg.ProblemDetails.(*models.ProblemDetails)
 		if pd != nil {
 			logger.CommLog.Info("---testing the condition models.problemdetails nil---")
@@ -611,6 +614,7 @@ func HandleRegistrationStatusUpdateRequest(request *httpwrapper.Request) *httpwr
 			logger.CommLog.Info(int(msg.ProblemDetails.(*models.ProblemDetails).Status))
 			logger.CommLog.Info("---problemdetails:", msg.ProblemDetails.(*models.ProblemDetails))
 		} else {
+			logger.CommLog.Info("Response with problem details")
 			problemDetails := &models.ProblemDetails{
 				Status: http.StatusNotFound,
 				Cause:  "CONTEXT_NOT_FOUND",
