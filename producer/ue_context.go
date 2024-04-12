@@ -627,7 +627,6 @@ func HandleRegistrationStatusUpdateRequest(request *httpwrapper.Request) *httpwr
 func RegistrationStatusUpdateProcedure(ueContextID string, ueRegStatusUpdateReqData models.UeRegStatusUpdateReqData) (
 	*models.UeRegStatusUpdateRspData, *models.ProblemDetails,
 ) {
-
 	amfSelf := context.AMF_Self()
 
 	// ueContextID must be a 5g GUTI (TS 29.518 6.1.3.2.4.5.1)
@@ -639,7 +638,6 @@ func RegistrationStatusUpdateProcedure(ueContextID string, ueRegStatusUpdateReqD
 		}
 		logger.CommLog.Infof("problemdetails: %v", problemDetails)
 		return nil, problemDetails
-
 	}
 
 	ue, ok := amfSelf.AmfUeFindByUeContextID(ueContextID)
