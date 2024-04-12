@@ -656,7 +656,7 @@ func RegistrationStatusUpdateProcedure(ueContextID string, ueRegStatusUpdateReqD
 	ueRegStatusUpdateRspData := new(models.UeRegStatusUpdateRspData)
 
 	if ueRegStatusUpdateReqData.TransferStatus == models.UeContextTransferStatus_TRANSFERRED {
-		logger.CommLog.Info("testing status transfered")
+		logger.CommLog.Info("---testing status transfered")
 		// remove the individual ueContext resource and release any PDU session(s)
 		for _, pduSessionId := range ueRegStatusUpdateReqData.ToReleaseSessionList {
 			cause := models.Cause_REL_DUE_TO_SLICE_NOT_AVAILABLE
