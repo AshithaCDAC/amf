@@ -597,16 +597,11 @@ func HandleRegistrationStatusUpdateRequest(request *httpwrapper.Request) *httpwr
 		ueRegStatusUpdateRspData = msg.RespData.(*models.UeRegStatusUpdateRspData)
 	}
 	// ueRegStatusUpdateRspData, problemDetails := RegistrationStatusUpdateProcedure(ueContextID, ueRegStatusUpdateReqData)
-	// logger.CommLog.Infof("---problemdetailstatus: %d", int(msg.ProblemDetails.(*models.ProblemDetails).Status))
-	// logger.CommLog.Infof("---problemdetails: %v", msg.ProblemDetails.(*models.ProblemDetails))
 	logger.CommLog.Info("---value of msg.problemdetail: ", msg.ProblemDetails)
 	if msg.ProblemDetails != nil {
 		logger.CommLog.Info("---testing the condition problemdetail nil---")
-		// logger.CommLog.Info("---value of msg.problemdetail", msg.ProblemDetails)
-		logger.CommLog.Info("problemdetailstatus info only:", int(msg.ProblemDetails.(*models.ProblemDetails).Status))
-		logger.CommLog.Info("---problemdetails info only:", msg.ProblemDetails.(*models.ProblemDetails))
-		logger.CommLog.Infof("---problemdetailstatus infof: %d", int(msg.ProblemDetails.(*models.ProblemDetails).Status))
-		logger.CommLog.Infof("---problemdetails infof: %v", msg.ProblemDetails.(*models.ProblemDetails))
+		// logger.CommLog.Infof("---problemdetailstatus infof: %d", int(msg.ProblemDetails.(*models.ProblemDetails).Status))
+		// logger.CommLog.Infof("---problemdetails infof: %v", msg.ProblemDetails.(*models.ProblemDetails))
 		pd := msg.ProblemDetails.(*models.ProblemDetails)
 		logger.CommLog.Info("value of pd", pd)
 		logger.CommLog.Infof("value of pd: %v", pd)
@@ -632,29 +627,36 @@ func HandleRegistrationStatusUpdateRequest(request *httpwrapper.Request) *httpwr
 func RegistrationStatusUpdateProcedure(ueContextID string, ueRegStatusUpdateReqData models.UeRegStatusUpdateReqData) (
 	*models.UeRegStatusUpdateRspData, *models.ProblemDetails,
 ) {
+
 	amfSelf := context.AMF_Self()
 
 	// ueContextID must be a 5g GUTI (TS 29.518 6.1.3.2.4.5.1)
 	if !strings.HasPrefix(ueContextID, "5g-guti") {
+		logger.CommLog.Info("---prefix:", ueContextID)
 		problemDetails := &models.ProblemDetails{
 			Status: http.StatusForbidden,
 			Cause:  "UNSPECIFIED",
 		}
+		logger.CommLog.Infof("problemdetails: %v", problemDetails)
 		return nil, problemDetails
+
 	}
 
 	ue, ok := amfSelf.AmfUeFindByUeContextID(ueContextID)
 	if !ok {
+		logger.CommLog.Info("---amfuefindbyuecontextid:", ueContextID)
 		problemDetails := &models.ProblemDetails{
 			Status: http.StatusNotFound,
 			Cause:  "CONTEXT_NOT_FOUND",
 		}
+		logger.CommLog.Infof("problemdetails: %v", problemDetails)
 		return nil, problemDetails
 	}
 
 	ueRegStatusUpdateRspData := new(models.UeRegStatusUpdateRspData)
 
 	if ueRegStatusUpdateReqData.TransferStatus == models.UeContextTransferStatus_TRANSFERRED {
+		logger.CommLog.Info("testing status transfered")
 		// remove the individual ueContext resource and release any PDU session(s)
 		for _, pduSessionId := range ueRegStatusUpdateReqData.ToReleaseSessionList {
 			cause := models.Cause_REL_DUE_TO_SLICE_NOT_AVAILABLE
@@ -685,9 +687,11 @@ func RegistrationStatusUpdateProcedure(ueContextID string, ueRegStatusUpdateReqD
 		ue.Remove()
 	} else {
 		// NOT_TRANSFERRED
+		logger.CommLog.Info("---not transfered")
 		logger.CommLog.Debug("[AMF] RegistrationStatusUpdate: NOT_TRANSFERRED")
 	}
 
 	ueRegStatusUpdateRspData.RegStatusTransferComplete = true
+	logger.CommLog.Info("---ueRegStatusUpdateRspData:", ueRegStatusUpdateRspData)
 	return ueRegStatusUpdateRspData, nil
 }
