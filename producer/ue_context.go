@@ -687,7 +687,7 @@ func RegistrationStatusUpdateProcedure(ueContextID string, ueRegStatusUpdateReqD
 		ue.Remove()
 	} else {
 		// NOT_TRANSFERRED
-		logger.CommLog.Info("---not transfered")
+		logger.CommLog.Info("---not transferred")
 		logger.CommLog.Debug("[AMF] RegistrationStatusUpdate: NOT_TRANSFERRED")
 	}
 
