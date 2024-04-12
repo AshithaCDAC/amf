@@ -613,15 +613,24 @@ func HandleRegistrationStatusUpdateRequest(request *httpwrapper.Request) *httpwr
 			logger.CommLog.Info("---problemdetailstatus:")
 			logger.CommLog.Info(int(msg.ProblemDetails.(*models.ProblemDetails).Status))
 			logger.CommLog.Info("---problemdetails:", msg.ProblemDetails.(*models.ProblemDetails))
-		} else {
-			logger.CommLog.Info("Response with problem details")
-			problemDetails := &models.ProblemDetails{
-				Status: http.StatusNotFound,
-				Cause:  "CONTEXT_NOT_FOUND",
-			}
-			return httpwrapper.NewResponse(http.StatusForbidden, nil, problemDetails)
+			return httpwrapper.NewResponse(int(msg.ProblemDetails.(*models.ProblemDetails).Status), nil, msg.ProblemDetails.(*models.ProblemDetails))
+		} else if msg.RespData != nil {
+			logger.CommLog.Info("testing msg.responsedata nil")
+			// logger.CommLog.Info("Response with problem details")
+			// problemDetails := &models.ProblemDetails{
+			// 	Status: http.StatusNotFound,
+			// 	Cause:  "CONTEXT_NOT_FOUND",
+			// }
+			// return httpwrapper.NewResponse(http.StatusForbidden, nil, problemDetails)
+			return httpwrapper.NewResponse(http.StatusOK, nil, ueRegStatusUpdateRspData)
 		}
-		return httpwrapper.NewResponse(int(msg.ProblemDetails.(*models.ProblemDetails).Status), nil, msg.ProblemDetails.(*models.ProblemDetails))
+		logger.CommLog.Info("Response with problem details")
+		problemDetails := &models.ProblemDetails{
+			Status: http.StatusNotFound,
+			Cause:  "CONTEXT_NOT_FOUND",
+		}
+		return httpwrapper.NewResponse(http.StatusForbidden, nil, problemDetails)
+		// return httpwrapper.NewResponse(int(msg.ProblemDetails.(*models.ProblemDetails).Status), nil, msg.ProblemDetails.(*models.ProblemDetails))
 	} else {
 		return httpwrapper.NewResponse(http.StatusOK, nil, ueRegStatusUpdateRspData)
 	}
