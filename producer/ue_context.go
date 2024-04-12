@@ -594,12 +594,15 @@ func HandleRegistrationStatusUpdateRequest(request *httpwrapper.Request) *httpwr
 	ue.EventChannel.SubmitMessage(sbiMsg)
 	msg := <-sbiMsg.Result
 	if msg.RespData != nil {
+		logger.CommLog.Info("value of responsedata")
+		logger.CommLog.Info("value of responsedata:", msg.RespData)
 		ueRegStatusUpdateRspData = msg.RespData.(*models.UeRegStatusUpdateRspData)
+		logger.CommLog.Info("ueregstatusupdaterspdata", ueRegStatusUpdateRspData)
 	}
 	// ueRegStatusUpdateRspData, problemDetails := RegistrationStatusUpdateProcedure(ueContextID, ueRegStatusUpdateReqData)
 	logger.CommLog.Info("---value of msg.problemdetail: ", msg.ProblemDetails)
 	if msg.ProblemDetails != nil {
-		logger.CommLog.Info("---testing the condition problemdetail nil---")
+		logger.CommLog.Info("---testing the condition msg.problemdetail nil---", msg.ProblemDetails)
 		// logger.CommLog.Infof("---problemdetailstatus infof: %d", int(msg.ProblemDetails.(*models.ProblemDetails).Status))
 		// logger.CommLog.Infof("---problemdetails infof: %v", msg.ProblemDetails.(*models.ProblemDetails))
 		pd := msg.ProblemDetails.(*models.ProblemDetails)
