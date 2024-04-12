@@ -366,7 +366,6 @@ func SendInitialContextSetupRequest(
 	coreNetworkAssistanceInfo *ngapType.CoreNetworkAssistanceInformation,
 	emergencyFallbackIndicator *ngapType.EmergencyFallbackIndicator,
 ) {
-
 	if amfUe == nil {
 		logger.NgapLog.Error("AmfUe is nil")
 		return
