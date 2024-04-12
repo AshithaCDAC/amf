@@ -55,12 +55,11 @@ func SendToRan(ran *context.AmfRan, packet []byte) {
 		}
 
 		ran.Log.Debugf("Send NGAP message To Ran")
-
 		if n, err := ran.Conn.Write(packet); err != nil {
 			ran.Log.Errorf("Send error: %+v", err)
 			return
 		} else {
-			ran.Log.Debugf("Write %d bytes", n)
+			ran.Log.Infof("Write %d bytes", n)
 		}
 	}
 }
@@ -96,7 +95,7 @@ func NasSendToRan(ue *context.AmfUe, accessType models.AccessType, packet []byte
 		logger.NgapLog.Error("RanUe is nil")
 		return
 	}
-
+	logger.NgapLog.Infof("Sending nas message to: %d", ranUe.RanUeNgapId)
 	SendToRanUe(ranUe, packet)
 }
 
@@ -367,13 +366,14 @@ func SendInitialContextSetupRequest(
 	coreNetworkAssistanceInfo *ngapType.CoreNetworkAssistanceInformation,
 	emergencyFallbackIndicator *ngapType.EmergencyFallbackIndicator,
 ) {
+
 	if amfUe == nil {
 		logger.NgapLog.Error("AmfUe is nil")
 		return
 	}
 
 	amfUe.RanUe[anType].Log.Info("Send Initial Context Setup Request")
-
+	amfUe.RanUe[anType].Log.Infof("raw naspdu: %s", string(nasPdu))
 	if pduSessionResourceSetupRequestList != nil {
 		if len(pduSessionResourceSetupRequestList.List) > context.MaxNumOfPDUSessions {
 			amfUe.RanUe[anType].Log.Error("Pdu List out of range")
@@ -388,6 +388,7 @@ func SendInitialContextSetupRequest(
 		return
 	}
 	amfUe.RanUe[anType].SentInitialContextSetupRequest = true
+	amfUe.RanUe[anType].Log.Infof("raw initial_context_setup_request: %s", string(pkt))
 	NasSendToRan(amfUe, anType, pkt)
 }
 
