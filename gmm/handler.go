@@ -1304,37 +1304,35 @@ func handleRequestedNssai(ue *context.AmfUe, anType models.AccessType) error {
 				// Condition (A) Step 7: initial AMF find Target AMF via NRF ->
 				// Send Namf_Communication_N1MessageNotify to Target AMF
 				ue.GmmLog.Info("---value of antype:", anType)
-				// ue.GmmLog.Info("---value of ue.RanUe[anType]: ", ue.RanUe[anType])
-				// if ue.RanUe[anType] != nil{
-				// ue.GmmLog.Info("---checking ue.RanUe[anType] is nil")	
-				ueContext := consumer.BuildUeContextModel(ue)
-				registerContext := models.RegistrationContextContainer{
-					UeContext:        &ueContext,
-					AnType:           anType,
-					AnN2ApId:         int32(ue.RanUe[anType].RanUeNgapId),
-					RanNodeId:        ue.RanUe[anType].Ran.RanId,
-					InitialAmfName:   amfSelf.Name,
-					UserLocation:     &ue.Location,
-					RrcEstCause:      ue.RanUe[anType].RRCEstablishmentCause,
-					UeContextRequest: ue.RanUe[anType].UeContextRequest,
-					AnN2IPv4Addr:     ue.RanUe[anType].Ran.GnbIp,
-					AllowedNssai: &models.AllowedNssai{
-						AllowedSnssaiList: ue.AllowedNssai[anType],
-						AccessType:        anType,
-					},
+				ue.GmmLog.Info("---value of ue.Ranue[antype]: ", ue.RanUe[anType])
+				if ue.RanUe[anType] != nil {
+					ue.GmmLog.Info("---Checking ue.RanUe[anType] is nil")
+					ueContext := consumer.BuildUeContextModel(ue)
+					registerContext := models.RegistrationContextContainer{
+						UeContext:        &ueContext,
+						AnType:           anType,
+						AnN2ApId:         int32(ue.RanUe[anType].RanUeNgapId),
+						RanNodeId:        ue.RanUe[anType].Ran.RanId,
+						InitialAmfName:   amfSelf.Name,
+						UserLocation:     &ue.Location,
+						RrcEstCause:      ue.RanUe[anType].RRCEstablishmentCause,
+						UeContextRequest: ue.RanUe[anType].UeContextRequest,
+						AnN2IPv4Addr:     ue.RanUe[anType].Ran.GnbIp,
+						AllowedNssai: &models.AllowedNssai{
+							AllowedSnssaiList: ue.AllowedNssai[anType],
+							AccessType:        anType,
+						},
+					}
+					if len(ue.NetworkSliceInfo.RejectedNssaiInPlmn) > 0 {
+						registerContext.RejectedNssaiInPlmn = ue.NetworkSliceInfo.RejectedNssaiInPlmn
+					}
+					if len(ue.NetworkSliceInfo.RejectedNssaiInTa) > 0 {
+						registerContext.RejectedNssaiInTa = ue.NetworkSliceInfo.RejectedNssaiInTa
+					}
+					var n1Message bytes.Buffer
+					ue.RegistrationRequest.EncodeRegistrationRequest(&n1Message)
+					callback.SendN1MessageNotifyAtAMFReAllocation(ue, n1Message.Bytes(), &registerContext)
 				}
-			    // }
-			}
-				if len(ue.NetworkSliceInfo.RejectedNssaiInPlmn) > 0 {
-					registerContext.RejectedNssaiInPlmn = ue.NetworkSliceInfo.RejectedNssaiInPlmn
-				}
-				if len(ue.NetworkSliceInfo.RejectedNssaiInTa) > 0 {
-					registerContext.RejectedNssaiInTa = ue.NetworkSliceInfo.RejectedNssaiInTa
-				}
-
-				var n1Message bytes.Buffer
-				ue.RegistrationRequest.EncodeRegistrationRequest(&n1Message)
-				callback.SendN1MessageNotifyAtAMFReAllocation(ue, n1Message.Bytes(), &registerContext)
 			} else {
 				// Condition (B) Step 7: initial AMF can not find Target AMF via NRF -> Send Reroute NAS Request to RAN
 				allowedNssaiNgap := ngapConvert.AllowedNssaiToNgap(ue.AllowedNssai[anType])
