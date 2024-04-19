@@ -1305,8 +1305,8 @@ func handleRequestedNssai(ue *context.AmfUe, anType models.AccessType) error {
 				// Send Namf_Communication_N1MessageNotify to Target AMF
 				ue.GmmLog.Info("---value of antype:", anType)
 				ue.GmmLog.Info("---value of ue.RanUe[anType]: ", ue.RanUe[anType])
-				if ue.RanUe[anType] != nil{
-				 ue.GmmLog.Info("---checking ue.RanUe[anType] is nil")	
+				//if ue.RanUe[anType] != nil{
+				 //ue.GmmLog.Info("---checking ue.RanUe[anType] is nil")	
 				 ueContext := consumer.BuildUeContextModel(ue)
 				 registerContext := models.RegistrationContextContainer{
 					UeContext:        &ueContext,
@@ -1322,7 +1322,7 @@ func handleRequestedNssai(ue *context.AmfUe, anType models.AccessType) error {
 						AllowedSnssaiList: ue.AllowedNssai[anType],
 						AccessType:        anType,
 					},
-				 }
+				 //}
 			    }
 			}
 				if len(ue.NetworkSliceInfo.RejectedNssaiInPlmn) > 0 {
