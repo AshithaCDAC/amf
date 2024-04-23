@@ -461,6 +461,8 @@ func SendUpdateSmContextRequest(smContext *amf_context.SmContext,
 	problemDetail *models.ProblemDetails, err1 error,
 ) {
 	configuration := Nsmf_PDUSession.NewConfiguration()
+	logger.ConsumerLog.Info("---value of configuration", configuration)
+	logger.ConsumerLog.Info("---value of smcontext", smContext)
 	configuration.SetBasePath(smContext.SmfUri())
 	client := Nsmf_PDUSession.NewAPIClient(configuration)
 
