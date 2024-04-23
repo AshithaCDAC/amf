@@ -1677,9 +1677,11 @@ func HandlePDUSessionResourceSetupResponse(ran *context.AmfRan, message *ngapTyp
 
 		if pDUSessionResourceSetupResponseList != nil {
 			ranUe.Log.Trace("Send PDUSessionResourceSetupResponseTransfer to SMF")
+			ranUe.Log.Info("---Send PDUSessionResourceSetupResponseTransfer to SMF")
 
 			for _, item := range pDUSessionResourceSetupResponseList.List {
 				pduSessionID := int32(item.PDUSessionID.Value)
+				ranUe.Log.Info("---pdusessionid in resourcesetupresplist from ran", pduSessionID)
 				transfer := item.PDUSessionResourceSetupResponseTransfer
 				smContext, ok := amfUe.SmContextFindByPDUSessionID(pduSessionID)
 				if !ok {
@@ -1715,6 +1717,7 @@ func HandlePDUSessionResourceSetupResponse(ran *context.AmfRan, message *ngapTyp
 				transfer := item.PDUSessionResourceSetupUnsuccessfulTransfer
 				smContext, ok := amfUe.SmContextFindByPDUSessionID(pduSessionID)
 				if !ok {
+					ranUe.Log.Info("---Send PDUSessionResourceSetupUnsuccessfulTransfer to SMF")
 					ranUe.Log.Errorf("SmContext[PDU Session ID:%d] not found", pduSessionID)
 				}
 				_, _, _, err := consumer.SendUpdateSmContextN2Info(amfUe, smContext,

@@ -1014,6 +1014,7 @@ func (ue *AmfUe) StoreSmContext(pduSessionID int32, smContext *SmContext) {
 
 func (ue *AmfUe) SmContextFindByPDUSessionID(pduSessionID int32) (*SmContext, bool) {
 	if value, ok := ue.SmContextList.Load(pduSessionID); ok {
+		logger.ContextLog.Info("---smcontextlist", value)
 		return value.(*SmContext), true
 	} else {
 		return nil, false
