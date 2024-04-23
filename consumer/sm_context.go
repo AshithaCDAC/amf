@@ -460,6 +460,7 @@ func SendUpdateSmContextRequest(smContext *amf_context.SmContext,
 	response *models.UpdateSmContextResponse, errorResponse *models.UpdateSmContextErrorResponse,
 	problemDetail *models.ProblemDetails, err1 error,
 ) {
+	logger.ConsumerLog.Info("---Sending updatesmcontextrequest")
 	configuration := Nsmf_PDUSession.NewConfiguration()
 	logger.ConsumerLog.Info("---value of configuration", configuration)
 	logger.ConsumerLog.Info("---value of smcontext", smContext)
