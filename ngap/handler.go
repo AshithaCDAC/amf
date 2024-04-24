@@ -1681,7 +1681,7 @@ func HandlePDUSessionResourceSetupResponse(ran *context.AmfRan, message *ngapTyp
 
 			for _, item := range pDUSessionResourceSetupResponseList.List {
 				pduSessionID := int32(item.PDUSessionID.Value)
-				ranUe.Log.Info("---pdusessionid in resourcesetupresplist from ran", pduSessionID)
+				ranUe.Log.Info("---pdusessionid in resourcesetupresplist from ran: ", pduSessionID)
 				transfer := item.PDUSessionResourceSetupResponseTransfer
 				smContext, ok := amfUe.SmContextFindByPDUSessionID(pduSessionID)
 				if !ok {

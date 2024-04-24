@@ -387,7 +387,7 @@ func SendInitialContextSetupRequest(
 		return
 	}
 	amfUe.RanUe[anType].SentInitialContextSetupRequest = true
-	amfUe.RanUe[anType].Log.Infof("raw initial_context_setup_request: %s", string(pkt))
+	// amfUe.RanUe[anType].Log.Infof("---raw initial_context_setup_request: %s", string(pkt))
 	NasSendToRan(amfUe, anType, pkt)
 }
 

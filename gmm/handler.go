@@ -1303,7 +1303,7 @@ func handleRequestedNssai(ue *context.AmfUe, anType models.AccessType) error {
 			if err == nil {
 				// Condition (A) Step 7: initial AMF find Target AMF via NRF ->
 				// Send Namf_Communication_N1MessageNotify to Target AMF
-				ue.GmmLog.Info("---value of antype:", anType)
+				ue.GmmLog.Info("---value of antype in handle_req_nssai:", anType)
 				ue.GmmLog.Info("---value of ue.Ranue[antype]: ", ue.RanUe[anType])
 				if ue.RanUe[anType] != nil {
 					ue.GmmLog.Info("---Checking ue.RanUe[anType] is nil")

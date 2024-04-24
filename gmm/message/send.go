@@ -269,20 +269,22 @@ func SendRegistrationAccept(
 	errPduSessionId, errCause []uint8,
 	pduSessionResourceSetupList *ngapType.PDUSessionResourceSetupListCxtReq,
 ) {
-	ue.GmmLog.Info("Send Registration Accept + test log")
+	ue.GmmLog.Info("---Send Registration Accept + test log")
 	nasMsg, err := BuildRegistrationAccept(ue, anType, pDUSessionStatus, reactivationResult, errPduSessionId, errCause)
 	if err != nil {
 		ue.GmmLog.Error(err.Error())
 		return
 	}
-	ue.GmmLog.Info("Trying Initial Context Request using")
-	ue.GmmLog.Info(ue.RanUe[anType])
+	// ue.GmmLog.Info(ue.RanUe[anType].RanUeNgapId)
 	if ue.RanUe[anType] != nil {
+		ue.GmmLog.Info("---Trying Initial Context Request using")
+		ue.GmmLog.Info(ue.RanUe[anType].RanUeNgapId)
 		if ue.RanUe[anType].UeContextRequest {
+			ue.GmmLog.Info("---Sending registration accept using uecontextrequest")
 			ue.GmmLog.Info(ue.RanUe[anType].UeContextRequest)
 			ngap_message.SendInitialContextSetupRequest(ue, anType, nasMsg, pduSessionResourceSetupList, nil, nil, nil)
 		} else {
-			ue.GmmLog.Info("trying download nas transport")
+			ue.GmmLog.Info("---trying download nas transport")
 			ngap_message.SendDownlinkNasTransport(ue.RanUe[models.AccessType__3_GPP_ACCESS], nasMsg, nil)
 		}
 	}

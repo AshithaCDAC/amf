@@ -594,10 +594,9 @@ func HandleRegistrationStatusUpdateRequest(request *httpwrapper.Request) *httpwr
 	ue.EventChannel.SubmitMessage(sbiMsg)
 	msg := <-sbiMsg.Result
 	if msg.RespData != nil {
-		logger.CommLog.Info("value of responsedata")
-		logger.CommLog.Info("value of responsedata:", msg.RespData)
+		logger.CommLog.Info("---value of responsedata:", msg.RespData)
 		ueRegStatusUpdateRspData = msg.RespData.(*models.UeRegStatusUpdateRspData)
-		logger.CommLog.Info("ueregstatusupdaterspdata", ueRegStatusUpdateRspData)
+		logger.CommLog.Info("---ueregstatusupdaterspdata", ueRegStatusUpdateRspData)
 	}
 	// ueRegStatusUpdateRspData, problemDetails := RegistrationStatusUpdateProcedure(ueContextID, ueRegStatusUpdateReqData)
 	logger.CommLog.Info("---value of msg.problemdetail: ", msg.ProblemDetails)
@@ -607,7 +606,6 @@ func HandleRegistrationStatusUpdateRequest(request *httpwrapper.Request) *httpwr
 		// logger.CommLog.Infof("---problemdetails infof: %v", msg.ProblemDetails.(*models.ProblemDetails))
 		pd := msg.ProblemDetails.(*models.ProblemDetails)
 		logger.CommLog.Info("value of pd", pd)
-		logger.CommLog.Infof("value of pd: %v", pd)
 		if pd != nil {
 			logger.CommLog.Info("---testing the condition models.problemdetails nil---")
 			logger.CommLog.Info("---problemdetailstatus:")
@@ -615,7 +613,7 @@ func HandleRegistrationStatusUpdateRequest(request *httpwrapper.Request) *httpwr
 			logger.CommLog.Info("---problemdetails:", msg.ProblemDetails.(*models.ProblemDetails))
 			return httpwrapper.NewResponse(int(msg.ProblemDetails.(*models.ProblemDetails).Status), nil, msg.ProblemDetails.(*models.ProblemDetails))
 		} else if msg.RespData != nil {
-			logger.CommLog.Info("testing msg.responsedata nil")
+			logger.CommLog.Info("---testing msg.responsedata nil")
 			// logger.CommLog.Info("Response with problem details")
 			// problemDetails := &models.ProblemDetails{
 			// 	Status: http.StatusNotFound,
