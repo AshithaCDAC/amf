@@ -257,6 +257,9 @@ func RegistrationStatusUpdate(ue *amf_context.AmfUe, request models.UeRegStatusU
 	ueContextId := fmt.Sprintf("5g-guti-%s", ue.Guti)
 	logger.ConsumerLog.Info("---5g-guti", ue.Guti)
 	res, httpResp, localErr := client.IndividualUeContextDocumentApi.RegistrationStatusUpdate(ctx, ueContextId, request)
+	logger.ConsumerLog.Info("---value of responsedata returned: ", res)
+	logger.ConsumerLog.Info("---value of httpresponse returned: ", httpResp)
+	logger.ConsumerLog.Info("---value of localerr returned: ", localErr)
 	if localErr == nil {
 		regStatusTransferComplete = res.RegStatusTransferComplete
 	} else if httpResp != nil {
