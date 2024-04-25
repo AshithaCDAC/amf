@@ -252,7 +252,7 @@ func RegistrationStatusUpdate(ue *amf_context.AmfUe, request models.UeRegStatusU
 	configuration.SetBasePath(ue.TargetAmfUri)
 	client := Namf_Communication.NewAPIClient(configuration)
 
-	ctx, cancel := context.WithTimeout(context.TODO(), 30*time.Second)
+	ctx, cancel := context.WithTimeout(context.TODO(), 5*time.Second)
 	defer cancel()
 	ueContextId := fmt.Sprintf("5g-guti-%s", ue.Guti)
 	logger.ConsumerLog.Info("---5g-guti", ue.Guti)
