@@ -620,6 +620,7 @@ func HandleRegistrationStatusUpdateRequest(request *httpwrapper.Request) *httpwr
 			// 	Cause:  "CONTEXT_NOT_FOUND",
 			// }
 			// return httpwrapper.NewResponse(http.StatusForbidden, nil, problemDetails)
+			logger.CommLog.Info("---value of status ok: ", http.StatusOK)
 			return httpwrapper.NewResponse(http.StatusOK, nil, ueRegStatusUpdateRspData)
 		}
 		logger.CommLog.Info("Response with problem details")
