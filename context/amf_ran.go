@@ -93,7 +93,7 @@ func (ran *AmfRan) NewRanUe(ranUeNgapID int64) (*RanUe, error) {
 	logger.ContextLog.Info("---Inside the NewRanUe function")
 	ranUe := RanUe{}
 	self := AMF_Self()
-	logger.ContextLog.Info("---address of the pointer amfcontext:", &amfContext)
+	logger.ContextLog.Infof("---address of the pointer amfcontext: %p", &amfContext)
 	amfUeNgapID, err := self.AllocateAmfUeNgapID()
 	logger.ContextLog.Info("---value of amfuengapid: ", amfUeNgapID)
 	// logger.ContextLog.Info("---value of amfcontext: ", &amfContext)
