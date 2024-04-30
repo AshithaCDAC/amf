@@ -90,10 +90,12 @@ func (ran *AmfRan) Remove() {
 }
 
 func (ran *AmfRan) NewRanUe(ranUeNgapID int64) (*RanUe, error) {
+	logger.ContextLog.Info("---Inside the NewRanUe function")
 	ranUe := RanUe{}
 	self := AMF_Self()
+	logger.ContextLog.Info("---address of the pointer amfcontext:", &amfContext)
 	amfUeNgapID, err := self.AllocateAmfUeNgapID()
-	logger.ContextLog.Info("---value od amfuengapid: ", amfUeNgapID)
+	logger.ContextLog.Info("---value of amfuengapid: ", amfUeNgapID)
 	// logger.ContextLog.Info("---value of amfcontext: ", &amfContext)
 	if err != nil {
 		ran.Log.Errorln("Alloc Amf ue ngap id failed", err)

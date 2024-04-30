@@ -1491,6 +1491,7 @@ func HandleInitialUEMessage(ran *context.AmfRan, message *ngapType.NGAPPDU, sctp
 		ranUe = nil
 	}
 	if ranUe == nil {
+		logger.NgapLog.Info("---Checking the condition ranue is nil")
 		var err error
 		ranUe, err = ran.NewRanUe(rANUENGAPID.Value)
 		if err != nil {
