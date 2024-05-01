@@ -96,7 +96,6 @@ func (ran *AmfRan) NewRanUe(ranUeNgapID int64) (*RanUe, error) {
 	logger.ContextLog.Infof("---address of the pointer amfcontext: %p", &amfContext)
 	amfUeNgapID, err := self.AllocateAmfUeNgapID()
 	logger.ContextLog.Info("---value of amfuengapid: ", amfUeNgapID)
-	// logger.ContextLog.Info("---value of amfcontext: ", &amfContext)
 	if err != nil {
 		ran.Log.Errorln("Alloc Amf ue ngap id failed", err)
 		return nil, fmt.Errorf("Allocate AMF UE NGAP ID error: %+v", err)

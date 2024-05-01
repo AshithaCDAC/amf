@@ -124,12 +124,13 @@ func (context *AMFContext) TmsiAllocate() int32 {
 
 func (context *AMFContext) AllocateAmfUeNgapID() (int64, error) {
 	// val, err := AllocateUniqueID(&amfUeNGAPIDGenerator, "amfUeNgapID")
+	logger.ContextLog.Infof("---address of the pointer amfcontext: %p", &amfContext)
 	val, err := context.Drsm.AllocateInt32ID()
 	if err != nil {
 		logger.ContextLog.Errorf("Allocate NgapID error: %+v", err)
 		return -1, err
 	}
-
+	logger.ContextLog.Infof("---address of the pointer amfcontext: %p", &amfContext)
 	logger.ContextLog.Infof("Allocate AmfUeNgapID : %v", val)
 	return int64(val), nil
 }
