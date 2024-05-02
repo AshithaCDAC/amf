@@ -497,7 +497,7 @@ func FetchRanUeContext(ran *context.AmfRan, message *ngapType.NGAPPDU) (*context
 	return ranUe, aMFUENGAPID
 }
 
-func HandleNGSetupRequest(ran *context.AmfRan, message *ngapType.NGAPPDU) {
+func HandleNGSetupRequest(ue *context.AmfUe, ran *context.AmfRan, message *ngapType.NGAPPDU, requestedNssai []models.MappingOfSnssai) {
 	var globalRANNodeID *ngapType.GlobalRANNodeID
 	var rANNodeName *ngapType.RANNodeName
 	var supportedTAList *ngapType.SupportedTAList
@@ -593,6 +593,8 @@ func HandleNGSetupRequest(ran *context.AmfRan, message *ngapType.NGAPPDU) {
 				}
 			}
 			ran.Log.Debugf("PLMN_ID[MCC:%s MNC:%s] TAC[%s]", plmnId.Mcc, plmnId.Mnc, tac)
+			ran.Log.Infof("PLMN_ID[MCC:%s MNC:%s] TAC[%s]", plmnId.Mcc, plmnId.Mnc, tac)
+			ran.Log.Info("---Values in SNssaiList", supportedTAI.SNssaiList)
 			if len(ran.SupportedTAList) < capOfSupportTai {
 				ran.SupportedTAList = append(ran.SupportedTAList, supportedTAI)
 			} else {
@@ -600,7 +602,13 @@ func HandleNGSetupRequest(ran *context.AmfRan, message *ngapType.NGAPPDU) {
 			}
 		}
 	}
-
+	for _, requestedSnssai := range requestedNssai {
+		if ue.InSubscribedNssai(*requestedSnssai.ServingSnssai) {
+			ran.Log.Info("---Slice values are equal")
+		} else {
+			ran.Log.Info("---NG-Setup failure: No supported slice exist")
+		}
+	}
 	if len(ran.SupportedTAList) == 0 {
 		ran.Log.Warn("NG-Setup failure: No supported TA exist in NG-Setup request")
 		cause.Present = ngapType.CausePresentMisc
