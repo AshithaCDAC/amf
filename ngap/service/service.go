@@ -14,12 +14,14 @@ import (
 	"syscall"
 
 	"git.cs.nctu.edu.tw/calee/sctp"
+	"github.com/omec-project/amf/context"
 	"github.com/omec-project/amf/logger"
 	"github.com/omec-project/ngap"
+	"github.com/omec-project/openapi/models"
 )
 
 type NGAPHandler struct {
-	HandleMessage      func(conn net.Conn, msg []byte)
+	HandleMessage      func(conn net.Conn, msg []byte, ue *context.AmfUe, requestedNssai []models.MappingOfSnssai)
 	HandleNotification func(conn net.Conn, notification sctp.Notification)
 }
 
@@ -39,7 +41,7 @@ var sctpConfig sctp.SocketConfig = sctp.SocketConfig{
 	AssocInfo: &sctp.AssocInfo{AsocMaxRxt: 4},
 }
 
-func Run(addresses []string, port int, handler NGAPHandler) {
+func Run(addresses []string, port int, handler NGAPHandler, ue *context.AmfUe, requestedNssai []models.MappingOfSnssai) {
 	ips := []net.IPAddr{}
 
 	for _, addr := range addresses {
@@ -56,10 +58,10 @@ func Run(addresses []string, port int, handler NGAPHandler) {
 		Port:    port,
 	}
 
-	go listenAndServe(addr, handler)
+	go listenAndServe(addr, handler, ue, requestedNssai)
 }
 
-func listenAndServe(addr *sctp.SCTPAddr, handler NGAPHandler) {
+func listenAndServe(addr *sctp.SCTPAddr, handler NGAPHandler, ue *context.AmfUe, requestedNssai []models.MappingOfSnssai) {
 	if listener, err := sctpConfig.Listen("sctp", addr); err != nil {
 		logger.NgapLog.Errorf("Failed to listen: %+v", err)
 		return
@@ -138,7 +140,7 @@ func listenAndServe(addr *sctp.SCTPAddr, handler NGAPHandler) {
 		logger.NgapLog.Infof("[AMF] SCTP Accept from: %s", newConn.RemoteAddr().String())
 		connections.Store(newConn, newConn)
 
-		go handleConnection(newConn, readBufSize, handler)
+		go handleConnection(newConn, readBufSize, handler, ue, requestedNssai)
 	}
 }
 
@@ -160,7 +162,7 @@ func Stop() {
 	logger.NgapLog.Infof("SCTP server closed")
 }
 
-func handleConnection(conn *sctp.SCTPConn, bufsize uint32, handler NGAPHandler) {
+func handleConnection(conn *sctp.SCTPConn, bufsize uint32, handler NGAPHandler, ue *context.AmfUe, requestedNssai []models.MappingOfSnssai) {
 	defer func() {
 		// if AMF call Stop(), then conn.Close() will return EBADF because conn has been closed inside Stop()
 		if err := conn.Close(); err != nil && err != syscall.EBADF {
@@ -206,7 +208,7 @@ func handleConnection(conn *sctp.SCTPConn, bufsize uint32, handler NGAPHandler) 
 			logger.NgapLog.Tracef("Packet content:\n%+v", hex.Dump(buf[:n]))
 
 			// TODO: concurrent on per-UE message
-			handler.HandleMessage(conn, buf[:n])
+			handler.HandleMessage(conn, buf[:n], ue, requestedNssai)
 		}
 	}
 }

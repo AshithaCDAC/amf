@@ -18,6 +18,7 @@ import (
 	"sync"
 	"time"
 
+	"github.com/omec-project/amf/context"
 	"github.com/omec-project/amf/factory"
 	"github.com/omec-project/amf/logger"
 	"github.com/omec-project/openapi/models"
@@ -91,6 +92,8 @@ type AMFContext struct {
 	EnableDbStore            bool
 	EnableNrfCaching         bool
 	NrfCacheEvictionInterval time.Duration
+	ue                       *context.AmfUe
+	requestedNssai           []models.MappingOfSnssai
 }
 
 type AMFContextEventSubscription struct {
