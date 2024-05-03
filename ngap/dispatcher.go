@@ -144,11 +144,11 @@ func Dispatch(conn net.Conn, msg []byte, ue *context.AmfUe, requestedNssai []mod
 		ranUe.AmfUe.TxLog.Infof("Uecontext found. queuing ngap message to uechannel")
 		ranUe.AmfUe.EventChannel.UpdateNgapHandler(NgapMsgHandler)
 		ngapMsg := context.NgapMsg{
-			Ran:            ran,
-			NgapMsg:        pdu,
-			SctplbMsg:      nil,
-			Ue:             ue,
-			RequestedNssai: requestedNssai,
+			Ran:       ran,
+			NgapMsg:   pdu,
+			SctplbMsg: nil,
+			// Ue:             ue,
+			// RequestedNssai: requestedNssai,
 		}
 
 		ranUe.Ran.Conn = conn
