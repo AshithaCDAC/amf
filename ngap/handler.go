@@ -23,6 +23,7 @@ import (
 	"github.com/omec-project/amf/util"
 	"github.com/omec-project/aper"
 	mi "github.com/omec-project/metricfunc/pkg/metricinfo"
+	"github.com/omec-project/nas/nasConvert"
 	"github.com/omec-project/nas/nasMessage"
 	libngap "github.com/omec-project/ngap"
 	"github.com/omec-project/ngap/ngapConvert"
@@ -497,7 +498,7 @@ func FetchRanUeContext(ran *context.AmfRan, message *ngapType.NGAPPDU) (*context
 	return ranUe, aMFUENGAPID
 }
 
-func HandleNGSetupRequest(ue *context.AmfUe, ran *context.AmfRan, message *ngapType.NGAPPDU, requestedNssai []models.MappingOfSnssai) {
+func HandleNGSetupRequest(ue *context.AmfUe, ran *context.AmfRan, message *ngapType.NGAPPDU) {
 	var globalRANNodeID *ngapType.GlobalRANNodeID
 	var rANNodeName *ngapType.RANNodeName
 	var supportedTAList *ngapType.SupportedTAList
@@ -602,7 +603,12 @@ func HandleNGSetupRequest(ue *context.AmfUe, ran *context.AmfRan, message *ngapT
 			}
 		}
 	}
+	requestedNssai, err := nasConvert.RequestedNssaiToModels(ue.RegistrationRequest.RequestedNSSAI)
+	if err != nil {
+		ran.Log.Infof("Decode failed at RequestedNSSAI[%s]", err)
+	}
 	for _, requestedSnssai := range requestedNssai {
+		ran.Log.Infof("---requested nssai: %+v", *requestedSnssai.ServingSnssai)
 		if ue.InSubscribedNssai(*requestedSnssai.ServingSnssai) {
 			ran.Log.Info("---Slice values are equal")
 		} else {

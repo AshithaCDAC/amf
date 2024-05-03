@@ -14,14 +14,12 @@ import (
 	"syscall"
 
 	"git.cs.nctu.edu.tw/calee/sctp"
-	"github.com/omec-project/amf/context"
 	"github.com/omec-project/amf/logger"
 	"github.com/omec-project/ngap"
-	"github.com/omec-project/openapi/models"
 )
 
 type NGAPHandler struct {
-	HandleMessage      func(conn net.Conn, msg []byte, ue *context.AmfUe, requestedNssai []models.MappingOfSnssai)
+	HandleMessage      func(conn net.Conn, msg []byte)
 	HandleNotification func(conn net.Conn, notification sctp.Notification)
 }
 

@@ -366,11 +366,9 @@ type NasMsg struct {
 }
 
 type NgapMsg struct {
-	SctplbMsg      *sdcoreAmfServer.SctplbMessage
-	NgapMsg        *ngapType.NGAPPDU
-	Ran            *AmfRan
-	Ue             *AmfUe
-	RequestedNssai []models.MappingOfSnssai
+	SctplbMsg *sdcoreAmfServer.SctplbMessage
+	NgapMsg   *ngapType.NGAPPDU
+	Ran       *AmfRan
 }
 
 type SbiResponseMsg struct {
