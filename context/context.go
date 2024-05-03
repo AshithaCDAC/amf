@@ -91,8 +91,6 @@ type AMFContext struct {
 	EnableDbStore            bool
 	EnableNrfCaching         bool
 	NrfCacheEvictionInterval time.Duration
-	ue                       *context.AmfUe
-	requestedNssai           []models.MappingOfSnssai
 }
 
 type AMFContextEventSubscription struct {
@@ -133,7 +131,7 @@ func (context *AMFContext) AllocateAmfUeNgapID() (int64, error) {
 		return -1, err
 	}
 	logger.ContextLog.Infof("---address of the pointer amfcontext: %p", &amfContext)
-	logger.ContextLog.Infof("Allocate AmfUeNgapID : %v", val)
+	logger.ContextLog.Infof("Allocate AmfUeNgapID  : %v", val)
 	return int64(val), nil
 }
 

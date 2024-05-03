@@ -21,10 +21,9 @@ import (
 	"github.com/omec-project/amf/protos/sdcoreAmfServer"
 	"github.com/omec-project/ngap"
 	"github.com/omec-project/ngap/ngapType"
-	"github.com/omec-project/openapi/models"
 )
 
-func DispatchLb(sctplbMsg *sdcoreAmfServer.SctplbMessage, Amf2RanMsgChan chan *sdcoreAmfServer.AmfMessage, ue *context.AmfUe, requestedNssai []models.MappingOfSnssai) {
+func DispatchLb(sctplbMsg *sdcoreAmfServer.SctplbMessage, Amf2RanMsgChan chan *sdcoreAmfServer.AmfMessage) {
 	fmt.Printf("DispatchLb GnbId:%v GnbIp: %v %T", sctplbMsg.GnbId, sctplbMsg.GnbIpAddr, Amf2RanMsgChan)
 	var ran *context.AmfRan
 	amfSelf := context.AMF_Self()
@@ -103,26 +102,24 @@ func DispatchLb(sctplbMsg *sdcoreAmfServer.SctplbMessage, Amf2RanMsgChan chan *s
 		// ranUe.AmfUe.TxLog.Infof("Uecontext found. queuing ngap message to uechannel")
 		ranUe.AmfUe.EventChannel.UpdateNgapHandler(NgapMsgHandler)
 		ngapMsg := context.NgapMsg{
-			Ran:            ran,
-			NgapMsg:        pdu,
-			SctplbMsg:      sctplbMsg,
-			Ue:             ue,
-			RequestedNssai: requestedNssai,
+			Ran:       ran,
+			NgapMsg:   pdu,
+			SctplbMsg: sctplbMsg,
 		}
 
 		ranUe.AmfUe.EventChannel.SubmitMessage(ngapMsg)
 	} else {
-		go DispatchNgapMsg(ue, ran, pdu, sctplbMsg, requestedNssai)
+		go DispatchNgapMsg(ran, pdu, sctplbMsg)
 	}
 }
 
-func Dispatch(conn net.Conn, msg []byte, ue *context.AmfUe, requestedNssai []models.MappingOfSnssai) {
+func Dispatch(conn net.Conn, msg []byte) {
 	var ran *context.AmfRan
 	amfSelf := context.AMF_Self()
 
 	ran, ok := amfSelf.AmfRanFindByConn(conn)
 	if !ok {
-		logger.NgapLog.Infof("Create a new NG connection for: %s", conn.RemoteAddr().String())
+		logger.NgapLog.Infof("Create a new NG connection for : %s", conn.RemoteAddr().String())
 		ran = amfSelf.NewAmfRan(conn)
 	}
 
@@ -146,25 +143,23 @@ func Dispatch(conn net.Conn, msg []byte, ue *context.AmfUe, requestedNssai []mod
 		ranUe.AmfUe.TxLog.Infof("Uecontext found. queuing ngap message to uechannel")
 		ranUe.AmfUe.EventChannel.UpdateNgapHandler(NgapMsgHandler)
 		ngapMsg := context.NgapMsg{
-			Ran:            ran,
-			NgapMsg:        pdu,
-			SctplbMsg:      nil,
-			Ue:             ue,
-			RequestedNssai: requestedNssai,
+			Ran:       ran,
+			NgapMsg:   pdu,
+			SctplbMsg: nil,
 		}
 
 		ranUe.Ran.Conn = conn
 		ranUe.AmfUe.EventChannel.SubmitMessage(ngapMsg)
 	} else {
-		go DispatchNgapMsg(ue, ran, pdu, nil, requestedNssai)
+		go DispatchNgapMsg(ran, pdu, nil)
 	}
 }
 
 func NgapMsgHandler(ue *context.AmfUe, msg context.NgapMsg) {
-	DispatchNgapMsg(msg.Ue, msg.Ran, msg.NgapMsg, msg.SctplbMsg, msg.RequestedNssai)
+	DispatchNgapMsg(msg.Ran, msg.NgapMsg, msg.SctplbMsg)
 }
 
-func DispatchNgapMsg(ue *context.AmfUe, ran *context.AmfRan, pdu *ngapType.NGAPPDU, sctplbMsg *sdcoreAmfServer.SctplbMessage, requestedNssai []models.MappingOfSnssai) {
+func DispatchNgapMsg(ran *context.AmfRan, pdu *ngapType.NGAPPDU, sctplbMsg *sdcoreAmfServer.SctplbMessage) {
 	switch pdu.Present {
 	case ngapType.NGAPPDUPresentInitiatingMessage:
 		initiatingMessage := pdu.InitiatingMessage
@@ -180,7 +175,7 @@ func DispatchNgapMsg(ue *context.AmfUe, ran *context.AmfRan, pdu *ngapType.NGAPP
 			"")
 		switch initiatingMessage.ProcedureCode.Value {
 		case ngapType.ProcedureCodeNGSetup:
-			HandleNGSetupRequest(ue, ran, pdu, requestedNssai)
+			HandleNGSetupRequest(ran, pdu)
 		case ngapType.ProcedureCodeInitialUEMessage:
 			HandleInitialUEMessage(ran, pdu, sctplbMsg)
 		case ngapType.ProcedureCodeUplinkNASTransport:
