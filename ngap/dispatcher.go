@@ -146,20 +146,16 @@ func Dispatch(conn net.Conn, msg []byte) {
 			Ran:       ran,
 			NgapMsg:   pdu,
 			SctplbMsg: nil,
-			// Ue:             ue,
-			// RequestedNssai: requestedNssai,
 		}
 
 		ranUe.Ran.Conn = conn
 		ranUe.AmfUe.EventChannel.SubmitMessage(ngapMsg)
 	} else {
-		// go DispatchNgapMsg(ran, pdu, nil)
 		go DispatchNgapMsg(ran, pdu, nil)
 	}
 }
 
 func NgapMsgHandler(ue *context.AmfUe, msg context.NgapMsg) {
-	// DispatchNgapMsg(msg.Ran, msg.NgapMsg, msg.SctplbMsg)
 	DispatchNgapMsg(msg.Ran, msg.NgapMsg, msg.SctplbMsg)
 }
 
