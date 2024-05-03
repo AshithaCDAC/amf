@@ -18,7 +18,6 @@ import (
 	"sync"
 	"time"
 
-	"github.com/omec-project/amf/context"
 	"github.com/omec-project/amf/factory"
 	"github.com/omec-project/amf/logger"
 	"github.com/omec-project/openapi/models"
