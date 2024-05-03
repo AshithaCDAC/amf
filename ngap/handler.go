@@ -593,8 +593,8 @@ func HandleNGSetupRequest(ue *context.AmfUe, ran *context.AmfRan, message *ngapT
 				}
 			}
 			ran.Log.Debugf("PLMN_ID[MCC:%s MNC:%s] TAC[%s]", plmnId.Mcc, plmnId.Mnc, tac)
-			ran.Log.Infof("PLMN_ID[MCC:%s MNC:%s] TAC[%s]", plmnId.Mcc, plmnId.Mnc, tac)
-			ran.Log.Info("---Values in SNssaiList", supportedTAI.SNssaiList)
+			ran.Log.Infof("---PLMN_ID[MCC:%s MNC:%s] TAC[%s]", plmnId.Mcc, plmnId.Mnc, tac)
+			ran.Log.Info("---Slice Values in SNssaiList", supportedTAI.SNssaiList)
 			if len(ran.SupportedTAList) < capOfSupportTai {
 				ran.SupportedTAList = append(ran.SupportedTAList, supportedTAI)
 			} else {
