@@ -23,8 +23,6 @@ import (
 	"github.com/omec-project/amf/util"
 	"github.com/omec-project/aper"
 	mi "github.com/omec-project/metricfunc/pkg/metricinfo"
-
-	// "github.com/omec-project/nas/nasConvert"
 	"github.com/omec-project/nas/nasMessage"
 	libngap "github.com/omec-project/ngap"
 	"github.com/omec-project/ngap/ngapConvert"
