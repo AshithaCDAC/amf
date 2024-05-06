@@ -565,14 +565,14 @@ func (ue *AmfUe) InSubscribedNssai(targetSNssai models.Snssai) bool {
 	return false
 }
 
-// func (ue *AmfUe) Ifslicevalueequal(ngslice models.Snssai) bool {
-// 	for _, sliceval := range ue.SubscribedNssai{
-// 		if reflect.DeepEqual(*sliceval.SubscribedSnssai, ngslice){
-// 			return true
-// 		}
-// 	}
-// 	return false
-// }
+func (ue *AmfUe) Ifslicevalueequal(n_ssai models.Snssai) bool {
+	for _, sliceval := range ue.SubscribedNssai {
+		if reflect.DeepEqual(*sliceval.SubscribedSnssai, n_ssai) {
+			return true
+		}
+	}
+	return false
+}
 
 func (ue *AmfUe) GetNsiInformationFromSnssai(anType models.AccessType, snssai models.Snssai) *models.NsiInformation {
 	for _, allowedSnssai := range ue.AllowedNssai[anType] {

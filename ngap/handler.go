@@ -502,7 +502,7 @@ func HandleNGSetupRequest(ran *context.AmfRan, message *ngapType.NGAPPDU) {
 	var rANNodeName *ngapType.RANNodeName
 	var supportedTAList *ngapType.SupportedTAList
 	var pagingDRX *ngapType.PagingDRX
-	// var ue *context.AmfUe
+	var ue *context.AmfUe
 
 	var cause ngapType.Cause
 	supportedTAI := context.NewSupportedTAI()
@@ -628,11 +628,11 @@ func HandleNGSetupRequest(ran *context.AmfRan, message *ngapType.NGAPPDU) {
 		ran.Log.Info("---sstlist: ", sstList)
 		ran.Log.Info("---sdlist: ", sdList)
 
-		// if ue.Ifslicevalueequal(*s_nssai.Sst) {
-		// 	ran.Log.Info("---Slice values are equal")
-		// } else {
-		// 	ran.Log.Info("---NG-Setup failure: No supported slice exist")
-		// }
+		if ue.Ifslicevalueequal(s_nssai) {
+			ran.Log.Info("---Slice values are equal")
+		} else {
+			ran.Log.Info("---NG-Setup failure: No supported slice exist")
+		}
 	}
 
 	if len(ran.SupportedTAList) == 0 {
