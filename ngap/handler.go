@@ -505,6 +505,10 @@ func HandleNGSetupRequest(ran *context.AmfRan, message *ngapType.NGAPPDU) {
 	// var ue *context.AmfUe
 
 	var cause ngapType.Cause
+	supportedTAI := context.NewSupportedTAI()
+
+	var sstList []int32
+	var sdList []string
 
 	if ran == nil {
 		logger.NgapLog.Error("ran is nil")
@@ -579,7 +583,7 @@ func HandleNGSetupRequest(ran *context.AmfRan, message *ngapType.NGAPPDU) {
 		tac := hex.EncodeToString(supportedTAItem.TAC.Value)
 		capOfSupportTai := cap(ran.SupportedTAList)
 		for j := 0; j < len(supportedTAItem.BroadcastPLMNList.List); j++ {
-			supportedTAI := context.NewSupportedTAI()
+			// supportedTAI := context.NewSupportedTAI()
 			supportedTAI.Tai.Tac = tac
 			broadcastPLMNItem := supportedTAItem.BroadcastPLMNList.List[j]
 			plmnId := ngapConvert.PlmnIdToModels(broadcastPLMNItem.PLMNIdentity)
@@ -603,11 +607,7 @@ func HandleNGSetupRequest(ran *context.AmfRan, message *ngapType.NGAPPDU) {
 			}
 		}
 	}
-	// if ue.RegistrationRequest.RequestedNSSAI != nil {
-	// 	requestedNssai, err := nasConvert.RequestedNssaiToModels(ue.RegistrationRequest.RequestedNSSAI)
-	// 	if err != nil {
-	// 		ran.Log.Infof("Decode failed at RequestedNSSAI[%s]", err)
-	// 	}
+
 	// 	for _, requestedSnssai := range requestedNssai {
 	// 		ran.Log.Infof("---requested nssai: %+v", *requestedSnssai.ServingSnssai)
 	// 		if ue.InSubscribedNssai(*requestedSnssai.ServingSnssai) {
@@ -617,6 +617,22 @@ func HandleNGSetupRequest(ran *context.AmfRan, message *ngapType.NGAPPDU) {
 	// 		}
 	// 	}
 	// }
+	for _, s_nssai := range supportedTAI.SNssaiList {
+		sst := s_nssai.Sst
+		sd := s_nssai.Sd
+		sstList = append(sstList, sst)
+		sdList = append(sdList, sd)
+		ran.Log.Info("---value of s_nssai: ", s_nssai)
+		ran.Log.Info("---Sst Value in SNssaiList: ", sst)
+		ran.Log.Info("---Sd Value in SNssaiList: ", sd)
+
+		// if ue.Ifslicevalueequal(*s_nssai.Sst) {
+		// 	ran.Log.Info("---Slice values are equal")
+		// } else {
+		// 	ran.Log.Info("---NG-Setup failure: No supported slice exist")
+		// }
+	}
+
 	if len(ran.SupportedTAList) == 0 {
 		ran.Log.Warn("NG-Setup failure: No supported TA exist in NG-Setup request")
 		cause.Present = ngapType.CausePresentMisc
