@@ -498,11 +498,12 @@ func FetchRanUeContext(ran *context.AmfRan, message *ngapType.NGAPPDU) (*context
 	return ranUe, aMFUENGAPID
 }
 
-func HandleNGSetupRequest(ue *context.AmfUe, ran *context.AmfRan, message *ngapType.NGAPPDU) {
+func HandleNGSetupRequest(ran *context.AmfRan, message *ngapType.NGAPPDU) {
 	var globalRANNodeID *ngapType.GlobalRANNodeID
 	var rANNodeName *ngapType.RANNodeName
 	var supportedTAList *ngapType.SupportedTAList
 	var pagingDRX *ngapType.PagingDRX
+	var ue *context.AmfUe
 
 	var cause ngapType.Cause
 
