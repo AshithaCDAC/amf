@@ -604,16 +604,18 @@ func HandleNGSetupRequest(ran *context.AmfRan, message *ngapType.NGAPPDU) {
 			}
 		}
 	}
-	requestedNssai, err := nasConvert.RequestedNssaiToModels(ue.RegistrationRequest.RequestedNSSAI)
-	if err != nil {
-		ran.Log.Infof("Decode failed at RequestedNSSAI[%s]", err)
-	}
-	for _, requestedSnssai := range requestedNssai {
-		ran.Log.Infof("---requested nssai: %+v", *requestedSnssai.ServingSnssai)
-		if ue.InSubscribedNssai(*requestedSnssai.ServingSnssai) {
-			ran.Log.Info("---Slice values are equal")
-		} else {
-			ran.Log.Info("---NG-Setup failure: No supported slice exist")
+	if ue.RegistrationRequest.RequestedNSSAI != nil {
+		requestedNssai, err := nasConvert.RequestedNssaiToModels(ue.RegistrationRequest.RequestedNSSAI)
+		if err != nil {
+			ran.Log.Infof("Decode failed at RequestedNSSAI[%s]", err)
+		}
+		for _, requestedSnssai := range requestedNssai {
+			ran.Log.Infof("---requested nssai: %+v", *requestedSnssai.ServingSnssai)
+			if ue.InSubscribedNssai(*requestedSnssai.ServingSnssai) {
+				ran.Log.Info("---Slice values are equal")
+			} else {
+				ran.Log.Info("---NG-Setup failure: No supported slice exist")
+			}
 		}
 	}
 	if len(ran.SupportedTAList) == 0 {
