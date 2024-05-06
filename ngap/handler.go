@@ -604,7 +604,7 @@ func HandleNGSetupRequest(ran *context.AmfRan, message *ngapType.NGAPPDU) {
 			}
 		}
 	}
-	if ue.RegistrationRequest.RequestedNSSAI != nil {
+	if ue.RegistrationRequest != nil && ue.RegistrationRequest.RequestedNSSAI != nil {
 		requestedNssai, err := nasConvert.RequestedNssaiToModels(ue.RegistrationRequest.RequestedNSSAI)
 		if err != nil {
 			ran.Log.Infof("Decode failed at RequestedNSSAI[%s]", err)
