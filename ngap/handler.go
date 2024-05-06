@@ -28,6 +28,7 @@ import (
 	"github.com/omec-project/ngap/ngapConvert"
 	"github.com/omec-project/ngap/ngapType"
 	"github.com/omec-project/openapi/models"
+	"github.com/omec-project/util/fsm"
 )
 
 func FetchRanUeContext(ran *context.AmfRan, message *ngapType.NGAPPDU) (*context.RanUe, *ngapType.AMFUENGAPID) {
@@ -502,7 +503,10 @@ func HandleNGSetupRequest(ran *context.AmfRan, message *ngapType.NGAPPDU) {
 	var rANNodeName *ngapType.RANNodeName
 	var supportedTAList *ngapType.SupportedTAList
 	var pagingDRX *ngapType.PagingDRX
-	var ue *context.AmfUe
+	var args fsm.ArgsType
+	// var ue *context.AmfUe
+	var amfUe *context.AmfUe
+	amfUe = args[ArgAmfUe].(*context.AmfUe)
 
 	var cause ngapType.Cause
 	supportedTAI := context.NewSupportedTAI()
