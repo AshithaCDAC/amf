@@ -627,7 +627,7 @@ func HandleNGSetupRequest(ran *context.AmfRan, message *ngapType.NGAPPDU) {
 		ran.Log.Info("---Sd Value in SNssaiList: ", sd)
 		ran.Log.Info("---sstlist: ", sstList)
 		ran.Log.Info("---sdlist: ", sdList)
-
+		ran.Log.Info("---value of ue: ", ue)
 		if ue.Ifslicevalueequal(s_nssai) {
 			ran.Log.Info("---Slice values are equal")
 		} else {

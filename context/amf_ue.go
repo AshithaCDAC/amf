@@ -567,6 +567,9 @@ func (ue *AmfUe) InSubscribedNssai(targetSNssai models.Snssai) bool {
 
 func (ue *AmfUe) Ifslicevalueequal(n_ssai models.Snssai) bool {
 	for _, sliceval := range ue.SubscribedNssai {
+		logger.ContextLog.Info("---value of sliceval: ", sliceval)
+		logger.ContextLog.Info("---value of *sliceval.SubscribedSnssai: ", *sliceval.SubscribedSnssai)
+		logger.ContextLog.Info("---value of n_ssai: ", n_ssai)
 		if reflect.DeepEqual(*sliceval.SubscribedSnssai, n_ssai) {
 			return true
 		}
