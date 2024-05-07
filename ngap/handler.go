@@ -28,7 +28,6 @@ import (
 	"github.com/omec-project/ngap/ngapConvert"
 	"github.com/omec-project/ngap/ngapType"
 	"github.com/omec-project/openapi/models"
-	"github.com/omec-project/util/fsm"
 )
 
 func FetchRanUeContext(ran *context.AmfRan, message *ngapType.NGAPPDU) (*context.RanUe, *ngapType.AMFUENGAPID) {
@@ -503,11 +502,10 @@ func HandleNGSetupRequest(ran *context.AmfRan, message *ngapType.NGAPPDU) {
 	var rANNodeName *ngapType.RANNodeName
 	var supportedTAList *ngapType.SupportedTAList
 	var pagingDRX *ngapType.PagingDRX
-	var args fsm.ArgsType
+	// var args fsm.ArgsType
+	// var amfUe *context.AmfUe
+	// amfUe = args[ArgAmfUe].(*context.AmfUe)
 	// var ue *context.AmfUe
-	var amfUe *context.AmfUe
-	amfUe = args[ArgAmfUe].(*context.AmfUe)
-
 	var cause ngapType.Cause
 	supportedTAI := context.NewSupportedTAI()
 
@@ -631,12 +629,12 @@ func HandleNGSetupRequest(ran *context.AmfRan, message *ngapType.NGAPPDU) {
 		ran.Log.Info("---Sd Value in SNssaiList: ", sd)
 		ran.Log.Info("---sstlist: ", sstList)
 		ran.Log.Info("---sdlist: ", sdList)
-		ran.Log.Info("---value of ue: ", ue)
-		if ue.Ifslicevalueequal(s_nssai) {
-			ran.Log.Info("---Slice values are equal")
-		} else {
-			ran.Log.Info("---NG-Setup failure: No supported slice exist")
-		}
+		// ran.Log.Info("---value of ue: ", ue)
+		// if ue.Ifslicevalueequal(s_nssai) {
+		// 	ran.Log.Info("---Slice values are equal")
+		// } else {
+		// 	ran.Log.Info("---NG-Setup failure: No supported slice exist")
+		// }
 	}
 
 	if len(ran.SupportedTAList) == 0 {
@@ -1422,7 +1420,7 @@ func HandleInitialUEMessage(ran *context.AmfRan, message *ngapType.NGAPPDU, sctp
 	var iesCriticalityDiagnostics ngapType.CriticalityDiagnosticsIEList
 
 	if message == nil {
-		ran.Log.Error("NGAP Message is nil")
+		ran.Log.Error("NGAP Message is nil ")
 		return
 	}
 

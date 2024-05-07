@@ -116,6 +116,7 @@ type AmfUe struct {
 	TraceData                         *models.TraceData                         `json:"traceData,omitempty"`
 	UdmGroupId                        string                                    `json:"udmGroupId,omitempty"`
 	SubscribedNssai                   []models.SubscribedSnssai                 `json:"subscribeNssai,omitempty"`
+	// SubNssai                          []models.SubscribedSnssai
 	AccessAndMobilitySubscriptionData *models.AccessAndMobilitySubscriptionData `json:"accessAndMobilitySubscriptionData,omitempty"`
 	/* contex abut ausf */
 	AusfGroupId                       string                      `json:"ausfGroupId,omitempty"`
@@ -565,17 +566,17 @@ func (ue *AmfUe) InSubscribedNssai(targetSNssai models.Snssai) bool {
 	return false
 }
 
-func (ue *AmfUe) Ifslicevalueequal(n_ssai models.Snssai) bool {
-	for _, sliceval := range ue.SubscribedNssai {
-		logger.ContextLog.Info("---value of sliceval: ", sliceval)
-		logger.ContextLog.Info("---value of *sliceval.SubscribedSnssai: ", *sliceval.SubscribedSnssai)
-		logger.ContextLog.Info("---value of n_ssai: ", n_ssai)
-		if reflect.DeepEqual(*sliceval.SubscribedSnssai, n_ssai) {
-			return true
-		}
-	}
-	return false
-}
+// func (ue *AmfUe) Ifslicevalueequal(s_nssai models.Snssai) bool {
+// 	for _, sliceval := range ue.SubscribedNssai {
+// 		// logger.ContextLog.Info("---value of sliceval: ", sliceval)
+// 		// logger.ContextLog.Info("---value of *sliceval.SubscribedSnssai: ", *sliceval.SubscribedSnssai)
+// 		// logger.ContextLog.Info("---value of n_ssai: ", s_nssai)
+// 		if reflect.DeepEqual(*sliceval.SubscribedSnssai, s_nssai) {
+// 			return true
+// 		}
+// 	}
+// 	return false
+// }
 
 func (ue *AmfUe) GetNsiInformationFromSnssai(anType models.AccessType, snssai models.Snssai) *models.NsiInformation {
 	for _, allowedSnssai := range ue.AllowedNssai[anType] {
