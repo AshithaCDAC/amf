@@ -116,7 +116,6 @@ type AmfUe struct {
 	TraceData                         *models.TraceData                         `json:"traceData,omitempty"`
 	UdmGroupId                        string                                    `json:"udmGroupId,omitempty"`
 	SubscribedNssai                   []models.SubscribedSnssai                 `json:"subscribeNssai,omitempty"`
-	// SubNssai                          []models.SubscribedSnssai
 	AccessAndMobilitySubscriptionData *models.AccessAndMobilitySubscriptionData `json:"accessAndMobilitySubscriptionData,omitempty"`
 	/* contex abut ausf */
 	AusfGroupId                       string                      `json:"ausfGroupId,omitempty"`
