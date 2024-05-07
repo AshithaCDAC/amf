@@ -653,7 +653,11 @@ func HandleNGSetupRequest(ran *context.AmfRan, message *ngapType.NGAPPDU) {
 		}
 
 		for i, tai := range ran.SupportedTAList {
+			ran.Log.Info("---inside the for loop")
 			if context.InTaiList(tai.Tai, taiList) {
+				ran.Log.Info("---taiList: ", taiList)
+				ran.Log.Info("---tai.Tai: ", tai.Tai)
+				ran.Log.Info("---tai.SNssaiList: ", tai.SNssaiList)
 				ran.Log.Tracef("SERVED_TAI_INDEX[%d]", i)
 				found = true
 				break
