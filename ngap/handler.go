@@ -662,7 +662,7 @@ func HandleNGSetupRequest(ran *context.AmfRan, message *ngapType.NGAPPDU) {
 				ran.Log.Info("---tai.Tai: ", tai.Tai)
 				ran.Log.Info("---tai.SNssaiList: ", tai.SNssaiList)
 				ran.Log.Tracef("SERVED_TAI_INDEX[%d]", i)
-				ran.Log.Info("---SERVED_TAI_INDEX[%d]", i)
+				ran.Log.Infof("---SERVED_TAI_INDEX[%d]", i)
 				found = true
 				break
 			}
