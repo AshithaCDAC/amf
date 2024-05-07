@@ -656,6 +656,7 @@ func HandleNGSetupRequest(ran *context.AmfRan, message *ngapType.NGAPPDU) {
 			// ran.Log.Infof("Supported slice List in AMF sst: %v, sd: %v", taiList[i].Sst, taiList[i].Sd)
 		}
 		for i := range ssaiList {
+			ran.Log.Info("---inside the ssailist loop")
 			// ssaiList[i].SupportedSnssaiList= util.TACConfigToModels(taiList[i].Tac)
 			ran.Log.Infof("Supported Tai List in AMF Core Plmn: %v, Tac: 0x%v Slicelist: %v", ssaiList[i].Tai.PlmnId, ssaiList[i].Tai.Tac, ssaiList[i].SupportedSnssaiList)
 		}
