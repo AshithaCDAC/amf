@@ -504,7 +504,7 @@ func HandleNGSetupRequest(ran *context.AmfRan, message *ngapType.NGAPPDU) {
 	var pagingDRX *ngapType.PagingDRX
 	// var args fsm.ArgsType
 	// var amfUe *context.AmfUe
-	// amfUe = args[ArgAmfUe].(*context.AmfUe)
+	// amfUe = args["AMF Ue"].(*context.AmfUe)
 	// var ue *context.AmfUe
 	var cause ngapType.Cause
 	supportedTAI := context.NewSupportedTAI()
@@ -650,6 +650,8 @@ func HandleNGSetupRequest(ran *context.AmfRan, message *ngapType.NGAPPDU) {
 		for i := range taiList {
 			taiList[i].Tac = util.TACConfigToModels(taiList[i].Tac)
 			ran.Log.Infof("Supported Tai List in AMF Plmn: %v, Tac: 0x%v Tac: %v", taiList[i].PlmnId, taiList[i].Tac, context.AMF_Self().SupportTaiLists[i].Tac)
+			ran.Log.Infof("Supported slice List in AMF sst: %v, sd: %v", taiList[i].Sst, taiList[i].Sd)
+
 		}
 
 		for i, tai := range ran.SupportedTAList {
