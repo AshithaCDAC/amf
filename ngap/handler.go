@@ -509,8 +509,8 @@ func HandleNGSetupRequest(ran *context.AmfRan, message *ngapType.NGAPPDU) {
 	var cause ngapType.Cause
 	supportedTAI := context.NewSupportedTAI()
 
-	var sstList []int32
-	var sdList []string
+	// var sstList []int32
+	// var sdList []string
 
 	if ran == nil {
 		logger.NgapLog.Error("ran is nil")
@@ -622,13 +622,14 @@ func HandleNGSetupRequest(ran *context.AmfRan, message *ngapType.NGAPPDU) {
 	for _, s_nssai := range supportedTAI.SNssaiList {
 		sst := s_nssai.Sst
 		sd := s_nssai.Sd
-		sstList = append(sstList, sst)
-		sdList = append(sdList, sd)
+		// sstList = append(sstList, sst)
+		// sdList = append(sdList, sd)
 		ran.Log.Info("---value of s_nssai: ", s_nssai)
 		ran.Log.Info("---Sst Value in SNssaiList: ", sst)
-		ran.Log.Info("---Sd Value in SNssaiList: ", sd)
-		ran.Log.Info("---sstlist: ", sstList)
-		ran.Log.Info("---sdlist: ", sdList)
+		ran.Log.Infof("---Sd Value in SNssaiList: 0x%v", sd)
+		// ran.Log.Info("---sstlist: ", sstList)
+		// ran.Log.Info("---sdlist: ", sdList)
+
 		// ran.Log.Info("---value of ue: ", ue)
 		// if ue.Ifslicevalueequal(s_nssai) {
 		// 	ran.Log.Info("---Slice values are equal")
@@ -650,7 +651,7 @@ func HandleNGSetupRequest(ran *context.AmfRan, message *ngapType.NGAPPDU) {
 		for i := range taiList {
 			taiList[i].Tac = util.TACConfigToModels(taiList[i].Tac)
 			ran.Log.Infof("Supported Tai List in AMF Plmn: %v, Tac: 0x%v Tac: %v", taiList[i].PlmnId, taiList[i].Tac, context.AMF_Self().SupportTaiLists[i].Tac)
-			ran.Log.Infof("Supported slice List in AMF sst: %v, sd: %v", taiList[i].Sst, taiList[i].Sd)
+			// ran.Log.Infof("Supported slice List in AMF sst: %v, sd: %v", taiList[i].Sst, taiList[i].Sd)
 
 		}
 
@@ -661,6 +662,7 @@ func HandleNGSetupRequest(ran *context.AmfRan, message *ngapType.NGAPPDU) {
 				ran.Log.Info("---tai.Tai: ", tai.Tai)
 				ran.Log.Info("---tai.SNssaiList: ", tai.SNssaiList)
 				ran.Log.Tracef("SERVED_TAI_INDEX[%d]", i)
+				ran.Log.Info("---SERVED_TAI_INDEX[%d]", i)
 				found = true
 				break
 			}
