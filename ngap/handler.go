@@ -647,11 +647,17 @@ func HandleNGSetupRequest(ran *context.AmfRan, message *ngapType.NGAPPDU) {
 	} else {
 		var found bool
 		taiList := make([]models.Tai, len(context.AMF_Self().SupportTaiLists))
+		ssaiList := make([]models.SupportedNssaiAvailabilityData, len(context.AMF_Self().SupportnssaiLists))
 		copy(taiList, context.AMF_Self().SupportTaiLists)
+		copy(ssaiList, context.AMF_Self().SupportnssaiLists)
 		for i := range taiList {
 			taiList[i].Tac = util.TACConfigToModels(taiList[i].Tac)
 			ran.Log.Infof("Supported Tai List in AMF Plmn: %v, Tac: 0x%v Tac: %v", taiList[i].PlmnId, taiList[i].Tac, context.AMF_Self().SupportTaiLists[i].Tac)
 			// ran.Log.Infof("Supported slice List in AMF sst: %v, sd: %v", taiList[i].Sst, taiList[i].Sd)
+		}
+		for i := range ssaiList {
+			// ssaiList[i].SupportedSnssaiList= util.TACConfigToModels(taiList[i].Tac)
+			ran.Log.Infof("Supported Tai List in AMF Core Plmn: %v, Tac: 0x%v Slicelist: %v", ssaiList[i].Tai.PlmnId, ssaiList[i].Tai.Tac, ssaiList[i].SupportedSnssaiList)
 		}
 
 		for i, tai := range ran.SupportedTAList {

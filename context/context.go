@@ -57,6 +57,7 @@ type AMFContext struct {
 	AmfRanPool                      sync.Map         // map[net.Conn]*AmfRan
 	LadnPool                        map[string]*LADN // dnn as key
 	SupportTaiLists                 []models.Tai
+	SupportnssaiLists               []models.SupportedNssaiAvailabilityData
 	ServedGuamiList                 []models.Guami
 	PlmnSupportList                 []factory.PlmnSupportItem
 	RelativeCapacity                int64
