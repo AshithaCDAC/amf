@@ -652,7 +652,6 @@ func HandleNGSetupRequest(ran *context.AmfRan, message *ngapType.NGAPPDU) {
 			taiList[i].Tac = util.TACConfigToModels(taiList[i].Tac)
 			ran.Log.Infof("Supported Tai List in AMF Plmn: %v, Tac: 0x%v Tac: %v", taiList[i].PlmnId, taiList[i].Tac, context.AMF_Self().SupportTaiLists[i].Tac)
 			// ran.Log.Infof("Supported slice List in AMF sst: %v, sd: %v", taiList[i].Sst, taiList[i].Sd)
-
 		}
 
 		for i, tai := range ran.SupportedTAList {
