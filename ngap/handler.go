@@ -650,6 +650,7 @@ func HandleNGSetupRequest(ran *context.AmfRan, message *ngapType.NGAPPDU) {
 		ssaiList := make([]models.SupportedNssaiAvailabilityData, len(context.AMF_Self().SupportnssaiLists))
 		copy(taiList, context.AMF_Self().SupportTaiLists)
 		copy(ssaiList, context.AMF_Self().SupportnssaiLists)
+		ran.Log.Info("---ssaiList: ", ssaiList)
 		for i := range taiList {
 			taiList[i].Tac = util.TACConfigToModels(taiList[i].Tac)
 			ran.Log.Infof("Supported Tai List in AMF Plmn: %v, Tac: 0x%v Tac: %v", taiList[i].PlmnId, taiList[i].Tac, context.AMF_Self().SupportTaiLists[i].Tac)
