@@ -510,7 +510,7 @@ func HandleNGSetupRequest(ran *context.AmfRan, message *ngapType.NGAPPDU) {
 
 	amfSelf := context.AMF_Self()
 	var pdu ngapType.NGAPPDU
-	pdu.Present = ngapType.NGAPPDUPresentSuccessfulOutcome
+	// pdu.Present = ngapType.NGAPPDUPresentSuccessfulOutcome
 	pdu.SuccessfulOutcome = new(ngapType.SuccessfulOutcome)
 
 	successfulOutcome := pdu.SuccessfulOutcome
