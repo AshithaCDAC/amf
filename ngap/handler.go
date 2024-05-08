@@ -502,15 +502,14 @@ func HandleNGSetupRequest(ran *context.AmfRan, message *ngapType.NGAPPDU) {
 	var rANNodeName *ngapType.RANNodeName
 	var supportedTAList *ngapType.SupportedTAList
 	var pagingDRX *ngapType.PagingDRX
-	// var args fsm.ArgsType
 	// var amfUe *context.AmfUe
-	// amfUe = args["AMF Ue"].(*context.AmfUe)
 	// var ue *context.AmfUe
 	var cause ngapType.Cause
-	var pdu ngapType.NGAPPDU
 
 	supportedTAI := context.NewSupportedTAI()
+
 	amfSelf := context.AMF_Self()
+	var pdu ngapType.NGAPPDU
 	pdu.Present = ngapType.NGAPPDUPresentSuccessfulOutcome
 	pdu.SuccessfulOutcome = new(ngapType.SuccessfulOutcome)
 
@@ -522,6 +521,8 @@ func HandleNGSetupRequest(ran *context.AmfRan, message *ngapType.NGAPPDU) {
 
 	nGSetupResponse := successfulOutcome.Value.NGSetupResponse
 	nGSetupResponseIEs := &nGSetupResponse.ProtocolIEs
+
+	ie := ngapType.NGSetupResponseIEs{}
 
 	// var sstList []int32
 	// var sdList []string
@@ -656,7 +657,7 @@ func HandleNGSetupRequest(ran *context.AmfRan, message *ngapType.NGAPPDU) {
 	// ran.Log.Info("---value of ie.criticality.value: ", ie.Criticality.Value)
 	// ran.Log.Info("---value of ie.Value.PLMNSupportList ", ie.Value.PLMNSupportList)
 
-	ie := ngapType.NGSetupResponseIEs{}
+	ie = ngapType.NGSetupResponseIEs{}
 	ie.Id.Value = ngapType.ProtocolIEIDPLMNSupportList
 	ie.Criticality.Value = ngapType.CriticalityPresentReject
 	ie.Value.Present = ngapType.NGSetupResponseIEsPresentPLMNSupportList
