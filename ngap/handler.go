@@ -634,7 +634,6 @@ func HandleNGSetupRequest(ran *context.AmfRan, message *ngapType.NGAPPDU) {
 
 	ran.Log.Info("---supported SNssailist from gnb: ", supportedTAI.SNssaiList)
 
-	ie := ngapType.NGSetupResponseIEs{}
 	// ran.Log.Info("---value of ie: ", ie)
 	// ran.Log.Info("---value of ie.id: ", ie.Id)
 	// ran.Log.Info("---value of ie.value: ", ie.Value)
@@ -643,6 +642,11 @@ func HandleNGSetupRequest(ran *context.AmfRan, message *ngapType.NGAPPDU) {
 	// ran.Log.Info("---value of ie.value.present: ", ie.Value.Present)
 	// ran.Log.Info("---value of ie.criticality.value: ", ie.Criticality.Value)
 	// ran.Log.Info("---value of ie.Value.PLMNSupportList ", ie.Value.PLMNSupportList)
+	var pdu ngapType.NGAPPDU
+	ie := ngapType.NGSetupResponseIEs{}
+	successfulOutcome := pdu.SuccessfulOutcome
+	nGSetupResponse := successfulOutcome.Value.NGSetupResponse
+	nGSetupResponseIEs := &nGSetupResponse.ProtocolIEs
 	if ie.Value.PLMNSupportList != nil {
 		pLMNSupportList := ie.Value.PLMNSupportList
 		ran.Log.Info("---pLMNSupportList: ", pLMNSupportList)
@@ -656,6 +660,7 @@ func HandleNGSetupRequest(ran *context.AmfRan, message *ngapType.NGAPPDU) {
 			}
 			pLMNSupportList.List = append(pLMNSupportList.List, pLMNSupportItem)
 		}
+		nGSetupResponseIEs.List = append(nGSetupResponseIEs.List, ie)
 		ran.Log.Info("---plmnsupport list from AMF: ", pLMNSupportList.List)
 	}
 
@@ -675,10 +680,10 @@ func HandleNGSetupRequest(ran *context.AmfRan, message *ngapType.NGAPPDU) {
 	} else {
 		var found bool
 		taiList := make([]models.Tai, len(context.AMF_Self().SupportTaiLists))
-		ssaiList := make([]models.SupportedNssaiAvailabilityData, len(context.AMF_Self().SupportnssaiLists))
+		// ssaiList := make([]models.SupportedNssaiAvailabilityData, len(context.AMF_Self().SupportnssaiLists))
 		copy(taiList, context.AMF_Self().SupportTaiLists)
-		copy(ssaiList, context.AMF_Self().SupportnssaiLists)
-		ran.Log.Info("---ssaiList: ", ssaiList)
+		// copy(ssaiList, context.AMF_Self().SupportnssaiLists)
+		// ran.Log.Info("---ssaiList: ", ssaiList)
 		for i := range taiList {
 			taiList[i].Tac = util.TACConfigToModels(taiList[i].Tac)
 			ran.Log.Infof("Supported Tai List in AMF Plmn: %v, Tac: 0x%v Tac: %v", taiList[i].PlmnId, taiList[i].Tac, context.AMF_Self().SupportTaiLists[i].Tac)
