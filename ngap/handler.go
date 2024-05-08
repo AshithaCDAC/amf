@@ -10,6 +10,7 @@ package ngap
 import (
 	"encoding/hex"
 	"os"
+	"reflect"
 	"strconv"
 
 	"github.com/omec-project/amf/consumer"
@@ -508,6 +509,7 @@ func HandleNGSetupRequest(ran *context.AmfRan, message *ngapType.NGAPPDU) {
 	// var ue *context.AmfUe
 	var cause ngapType.Cause
 	supportedTAI := context.NewSupportedTAI()
+	amfSelf := context.AMF_Self()
 
 	// var sstList []int32
 	// var sdList []string
@@ -629,13 +631,30 @@ func HandleNGSetupRequest(ran *context.AmfRan, message *ngapType.NGAPPDU) {
 		ran.Log.Infof("---Sd Value in SNssaiList: 0x%v", sd)
 		// ran.Log.Info("---sstlist: ", sstList)
 		// ran.Log.Info("---sdlist: ", sdList)
+	}
 
-		// ran.Log.Info("---value of ue: ", ue)
-		// if ue.Ifslicevalueequal(s_nssai) {
-		// 	ran.Log.Info("---Slice values are equal")
-		// } else {
-		// 	ran.Log.Info("---NG-Setup failure: No supported slice exist")
-		// }
+	ran.Log.Info("---supported SNssailist from gnb: ", supportedTAI.SNssaiList)
+
+	ie := ngapType.NGSetupResponseIEs{}
+	pLMNSupportList := ie.Value.PLMNSupportList
+	for _, plmnItem := range amfSelf.PlmnSupportList {
+		pLMNSupportItem := ngapType.PLMNSupportItem{}
+		pLMNSupportItem.PLMNIdentity = ngapConvert.PlmnIdToNgap(plmnItem.PlmnId)
+		for _, snssai := range plmnItem.SNssaiList {
+			sliceSupportItem := ngapType.SliceSupportItem{}
+			sliceSupportItem.SNSSAI = ngapConvert.SNssaiToNgap(snssai)
+			pLMNSupportItem.SliceSupportList.List = append(pLMNSupportItem.SliceSupportList.List, sliceSupportItem)
+		}
+		pLMNSupportList.List = append(pLMNSupportList.List, pLMNSupportItem)
+	}
+
+	ran.Log.Info("---plmnsupport list from AMF: ", pLMNSupportList.List)
+
+	if reflect.DeepEqual(supportedTAI.SNssaiList, pLMNSupportList.List) {
+		ran.Log.Info("---inside the deepequal comparison")
+		ran.Log.Info("---Slice values are equal")
+	} else {
+		ran.Log.Info("---NG-Setup failure: No supported slice exist")
 	}
 
 	if len(ran.SupportedTAList) == 0 {
@@ -656,11 +675,11 @@ func HandleNGSetupRequest(ran *context.AmfRan, message *ngapType.NGAPPDU) {
 			ran.Log.Infof("Supported Tai List in AMF Plmn: %v, Tac: 0x%v Tac: %v", taiList[i].PlmnId, taiList[i].Tac, context.AMF_Self().SupportTaiLists[i].Tac)
 			// ran.Log.Infof("Supported slice List in AMF sst: %v, sd: %v", taiList[i].Sst, taiList[i].Sd)
 		}
-		for i := range ssaiList {
-			ran.Log.Info("---inside the ssailist loop")
-			// ssaiList[i].SupportedSnssaiList= util.TACConfigToModels(taiList[i].Tac)
-			ran.Log.Infof("Supported Tai List in AMF Core Plmn: %v, Tac: 0x%v Slicelist: %v", ssaiList[i].Tai.PlmnId, ssaiList[i].Tai.Tac, ssaiList[i].SupportedSnssaiList)
-		}
+		// for i := range ssaiList {
+		// 	ran.Log.Info("---inside the ssailist loop")
+		// 	// ssaiList[i].SupportedSnssaiList= util.TACConfigToModels(taiList[i].Tac)
+		// 	ran.Log.Infof("Supported Tai List in AMF Core Plmn: %v, Tac: 0x%v Slicelist: %v", ssaiList[i].Tai.PlmnId, ssaiList[i].Tai.Tac, ssaiList[i].SupportedSnssaiList)
+		// }
 
 		for i, tai := range ran.SupportedTAList {
 			ran.Log.Info("---inside the for loop")
