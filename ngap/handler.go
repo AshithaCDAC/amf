@@ -10,7 +10,6 @@ package ngap
 import (
 	"encoding/hex"
 	"os"
-	"reflect"
 	"strconv"
 
 	"github.com/omec-project/amf/consumer"
@@ -636,35 +635,36 @@ func HandleNGSetupRequest(ran *context.AmfRan, message *ngapType.NGAPPDU) {
 	ran.Log.Info("---supported SNssailist from gnb: ", supportedTAI.SNssaiList)
 
 	ie := ngapType.NGSetupResponseIEs{}
-	ran.Log.Info("---value of ie: ", ie)
-	ran.Log.Info("---value of ie.id: ", ie.Id)
-	ran.Log.Info("---value of ie.value: ", ie.Value)
-	ran.Log.Info("---value of iecriticality: ", ie.Criticality)
-	ran.Log.Info("---value of ie.id.value: ", ie.Id.Value)
-	ran.Log.Info("---value of ie.value.present: ", ie.Value.Present)
-	ran.Log.Info("---value of ie.criticality.value: ", ie.Criticality.Value)
-	ran.Log.Info("---value of ie.Value.PLMNSupportList ", ie.Value.PLMNSupportList)
-	pLMNSupportList := ie.Value.PLMNSupportList
-	ran.Log.Info("---pLMNSupportList: ", pLMNSupportList)
-	for _, plmnItem := range amfSelf.PlmnSupportList {
-		pLMNSupportItem := ngapType.PLMNSupportItem{}
-		pLMNSupportItem.PLMNIdentity = ngapConvert.PlmnIdToNgap(plmnItem.PlmnId)
-		for _, snssai := range plmnItem.SNssaiList {
-			sliceSupportItem := ngapType.SliceSupportItem{}
-			sliceSupportItem.SNSSAI = ngapConvert.SNssaiToNgap(snssai)
-			pLMNSupportItem.SliceSupportList.List = append(pLMNSupportItem.SliceSupportList.List, sliceSupportItem)
+	// ran.Log.Info("---value of ie: ", ie)
+	// ran.Log.Info("---value of ie.id: ", ie.Id)
+	// ran.Log.Info("---value of ie.value: ", ie.Value)
+	// ran.Log.Info("---value of iecriticality: ", ie.Criticality)
+	// ran.Log.Info("---value of ie.id.value: ", ie.Id.Value)
+	// ran.Log.Info("---value of ie.value.present: ", ie.Value.Present)
+	// ran.Log.Info("---value of ie.criticality.value: ", ie.Criticality.Value)
+	// ran.Log.Info("---value of ie.Value.PLMNSupportList ", ie.Value.PLMNSupportList)
+	if ie.Value.PLMNSupportList != nil {
+		pLMNSupportList := ie.Value.PLMNSupportList
+		ran.Log.Info("---pLMNSupportList: ", pLMNSupportList)
+		for _, plmnItem := range amfSelf.PlmnSupportList {
+			pLMNSupportItem := ngapType.PLMNSupportItem{}
+			pLMNSupportItem.PLMNIdentity = ngapConvert.PlmnIdToNgap(plmnItem.PlmnId)
+			for _, snssai := range plmnItem.SNssaiList {
+				sliceSupportItem := ngapType.SliceSupportItem{}
+				sliceSupportItem.SNSSAI = ngapConvert.SNssaiToNgap(snssai)
+				pLMNSupportItem.SliceSupportList.List = append(pLMNSupportItem.SliceSupportList.List, sliceSupportItem)
+			}
+			pLMNSupportList.List = append(pLMNSupportList.List, pLMNSupportItem)
 		}
-		pLMNSupportList.List = append(pLMNSupportList.List, pLMNSupportItem)
+		ran.Log.Info("---plmnsupport list from AMF: ", pLMNSupportList.List)
 	}
 
-	ran.Log.Info("---plmnsupport list from AMF: ", pLMNSupportList.List)
-
-	if reflect.DeepEqual(supportedTAI.SNssaiList, pLMNSupportList.List) {
-		ran.Log.Info("---inside the deepequal comparison")
-		ran.Log.Info("---Slice values are equal")
-	} else {
-		ran.Log.Info("---NG-Setup failure: No supported slice exist")
-	}
+	// if reflect.DeepEqual(supportedTAI.SNssaiList, pLMNSupportList.List) {
+	// 	ran.Log.Info("---inside the deepequal comparison")
+	// 	ran.Log.Info("---Slice values are equal")
+	// } else {
+	// 	ran.Log.Info("---NG-Setup failure: No supported slice exist")
+	// }
 
 	if len(ran.SupportedTAList) == 0 {
 		ran.Log.Warn("NG-Setup failure: No supported TA exist in NG-Setup request")
