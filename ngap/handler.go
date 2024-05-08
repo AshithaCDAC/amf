@@ -507,8 +507,21 @@ func HandleNGSetupRequest(ran *context.AmfRan, message *ngapType.NGAPPDU) {
 	// amfUe = args["AMF Ue"].(*context.AmfUe)
 	// var ue *context.AmfUe
 	var cause ngapType.Cause
+	var pdu ngapType.NGAPPDU
+
 	supportedTAI := context.NewSupportedTAI()
 	amfSelf := context.AMF_Self()
+	pdu.Present = ngapType.NGAPPDUPresentSuccessfulOutcome
+	pdu.SuccessfulOutcome = new(ngapType.SuccessfulOutcome)
+
+	successfulOutcome := pdu.SuccessfulOutcome
+	successfulOutcome.ProcedureCode.Value = ngapType.ProcedureCodeNGSetup
+	successfulOutcome.Criticality.Value = ngapType.CriticalityPresentReject
+	successfulOutcome.Value.Present = ngapType.SuccessfulOutcomePresentNGSetupResponse
+	successfulOutcome.Value.NGSetupResponse = new(ngapType.NGSetupResponse)
+
+	nGSetupResponse := successfulOutcome.Value.NGSetupResponse
+	nGSetupResponseIEs := &nGSetupResponse.ProtocolIEs
 
 	// var sstList []int32
 	// var sdList []string
@@ -642,11 +655,13 @@ func HandleNGSetupRequest(ran *context.AmfRan, message *ngapType.NGAPPDU) {
 	// ran.Log.Info("---value of ie.value.present: ", ie.Value.Present)
 	// ran.Log.Info("---value of ie.criticality.value: ", ie.Criticality.Value)
 	// ran.Log.Info("---value of ie.Value.PLMNSupportList ", ie.Value.PLMNSupportList)
-	var pdu ngapType.NGAPPDU
+
 	ie := ngapType.NGSetupResponseIEs{}
-	successfulOutcome := pdu.SuccessfulOutcome
-	nGSetupResponse := successfulOutcome.Value.NGSetupResponse
-	nGSetupResponseIEs := &nGSetupResponse.ProtocolIEs
+	ie.Id.Value = ngapType.ProtocolIEIDPLMNSupportList
+	ie.Criticality.Value = ngapType.CriticalityPresentReject
+	ie.Value.Present = ngapType.NGSetupResponseIEsPresentPLMNSupportList
+	ie.Value.PLMNSupportList = new(ngapType.PLMNSupportList)
+
 	if ie.Value.PLMNSupportList != nil {
 		pLMNSupportList := ie.Value.PLMNSupportList
 		ran.Log.Info("---pLMNSupportList: ", pLMNSupportList)
