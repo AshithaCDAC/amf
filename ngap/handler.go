@@ -637,12 +637,13 @@ func HandleNGSetupRequest(ran *context.AmfRan, message *ngapType.NGAPPDU) {
 
 	ie := ngapType.NGSetupResponseIEs{}
 	ran.Log.Info("---value of ie: ", ie)
-	ran.Log.Info("---value of ie: ", ie.Id)
-	ran.Log.Info("---value of ie: ", ie.Value)
-	ran.Log.Info("---value of ie: ", ie.Criticality)
-	ran.Log.Info("---value of ie: ", ie.Id.Value)
-	ran.Log.Info("---value of ie: ", ie.Value.Present)
-	ran.Log.Info("---value of ie: ", ie.Criticality.Value)
+	ran.Log.Info("---value of ie.id: ", ie.Id)
+	ran.Log.Info("---value of ie.value: ", ie.Value)
+	ran.Log.Info("---value of iecriticality: ", ie.Criticality)
+	ran.Log.Info("---value of ie.id.value: ", ie.Id.Value)
+	ran.Log.Info("---value of ie.value.present: ", ie.Value.Present)
+	ran.Log.Info("---value of ie.criticality.value: ", ie.Criticality.Value)
+	ran.Log.Info("---value of ie.Value.PLMNSupportList ", ie.Value.PLMNSupportList)
 	pLMNSupportList := ie.Value.PLMNSupportList
 	ran.Log.Info("---pLMNSupportList: ", pLMNSupportList)
 	for _, plmnItem := range amfSelf.PlmnSupportList {
