@@ -626,7 +626,7 @@ func HandleNGSetupRequest(ran *context.AmfRan, message *ngapType.NGAPPDU) {
 		sd := s_nssai.Sd
 		// sstList = append(sstList, sst)
 		// sdList = append(sdList, sd)
-		ran.Log.Info("---value of s_nssai: ", s_nssai)
+		// ran.Log.Info("---value of s_nssai: ", s_nssai)
 		ran.Log.Info("---Sst Value in SNssaiList: ", sst)
 		ran.Log.Infof("---Sd Value in SNssaiList: 0x%v", sd)
 		// ran.Log.Info("---sstlist: ", sstList)
@@ -636,7 +636,9 @@ func HandleNGSetupRequest(ran *context.AmfRan, message *ngapType.NGAPPDU) {
 	ran.Log.Info("---supported SNssailist from gnb: ", supportedTAI.SNssaiList)
 
 	ie := ngapType.NGSetupResponseIEs{}
+	ran.Log.Info("---value of ie: ", ie)
 	pLMNSupportList := ie.Value.PLMNSupportList
+	ran.Log.Info("---pLMNSupportList: ", pLMNSupportList)
 	for _, plmnItem := range amfSelf.PlmnSupportList {
 		pLMNSupportItem := ngapType.PLMNSupportItem{}
 		pLMNSupportItem.PLMNIdentity = ngapConvert.PlmnIdToNgap(plmnItem.PlmnId)
