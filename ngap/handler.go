@@ -684,8 +684,8 @@ func HandleNGSetupRequest(ran *context.AmfRan, message *ngapType.NGAPPDU) {
 			slice_support_list := s_nssai_amf.SliceSupportList
 			ie_extension := s_nssai_amf.IEExtensions
 			ran.Log.Info("---plmn_identity ", plmn_identity)
-			ran.Log.Infof("---slice_support_list", slice_support_list)
-			ran.Log.Infof("---ie_extension", ie_extension)
+			ran.Log.Info("---slice_support_list", slice_support_list)
+			ran.Log.Info("---ie_extension", ie_extension)
 		}
 	}
 
