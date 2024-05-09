@@ -692,6 +692,14 @@ func HandleNGSetupRequest(ran *context.AmfRan, message *ngapType.NGAPPDU) {
 				slice_support_item_ieexten := slice_supportlist_list.IEExtensions
 				ran.Log.Info("---SNSSAI ", slice_support_item_snssai)
 				ran.Log.Info("---IEExtensions ", slice_support_item_ieexten)
+
+				slicesupplist_list_nssai := slice_supportlist_list.SNSSAI
+				snssai_sst_value := slicesupplist_list_nssai.SST
+				snssai_sd_value := slicesupplist_list_nssai.SD
+				snnsai_ieexten := slicesupplist_list_nssai.IEExtensions
+				ran.Log.Info("---SST ", snssai_sst_value)
+				ran.Log.Info("---SD ", snssai_sd_value)
+				ran.Log.Info("---IEEXTENSION ", snnsai_ieexten)
 			}
 		}
 	}
