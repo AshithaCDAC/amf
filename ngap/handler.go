@@ -703,7 +703,7 @@ func HandleNGSetupRequest(ran *context.AmfRan, message *ngapType.NGAPPDU) {
 
 					sdvalue := snssai_sd_value.Value
 					ran.Log.Info("---SD from AMF: ", sdvalue)
-					ran.Log.Infof("---SD from AMF: %p", sdvalue)
+					ran.Log.Infof("---SD from AMF: %d", sdvalue)
 
 					sstvalue := snssai_sst_value.Value
 					ran.Log.Info("---SST from AMF: ", sstvalue)
@@ -4907,3 +4907,14 @@ func buildCriticalityDiagnosticsIEItem(ieCriticality aper.Enumerated, ieID int64
 
 	return item
 }
+
+// func octetStringToInt32(sdvalue []byte, endian binary.ByteOrder) int32 {
+//     // Convert octet string to int32
+//     var sdvalueint int32
+//     if endian == binary.BigEndian {
+//         sdvalueint = int32(binary.BigEndian.Uint32(sdvalue))
+//     } else {
+//         intValue = int32(binary.LittleEndian.Uint32(sdvalue))
+//     }
+//     return intValue
+// }
