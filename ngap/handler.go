@@ -8,7 +8,6 @@
 package ngap
 
 import (
-	"encoding/binary"
 	"encoding/hex"
 	"os"
 	"strconv"
@@ -698,20 +697,26 @@ func HandleNGSetupRequest(ran *context.AmfRan, message *ngapType.NGAPPDU) {
 					snssai_sst_value := slicesupplist_list_nssai.SST
 					snssai_sd_value := slicesupplist_list_nssai.SD
 					snnsai_ieexten := slicesupplist_list_nssai.IEExtensions
-					ran.Log.Info("---SST ", snssai_sst_value)
-					ran.Log.Info("---SD ", snssai_sd_value)
-					ran.Log.Info("---IEEXTENSION ", snnsai_ieexten)
+					ran.Log.Info("---SST: ", snssai_sst_value)
+					ran.Log.Info("---SD: ", snssai_sd_value)
+					ran.Log.Info("---IEEXTENSION: ", snnsai_ieexten)
+
+					sdvalue := snssai_sd_value.Value
+					ran.Log.Info("---SD from AMF: ", sdvalue)
+					ran.Log.Info("---SD from AMF: %p", sdvalue)
 
 					sstvalue := snssai_sst_value.Value
-					ran.Log.Info("---SST from AMF ", sstvalue)
+					ran.Log.Info("---SST from AMF: ", sstvalue)
 
-					sstvalueint = int32(binary.BigEndian.Uint32(sstvalue))
-					ran.Log.Info("---converted integer value of sst: ", sstvalueint)
-					if sst == sstvalueint {
-						ran.Log.Info("---Sst values in Slice are equal")
-					} else {
-						ran.Log.Info("---NG-Setup failure: No supported slice exist")
-					}
+					// sstvalueint := int32(binary.LittleEndian.Uint32(sstvalue))
+					// ran.Log.Info("---converted integer value of sst: ", sstvalueint)
+
+					// compare the slice values
+					// if sst == sstvalueint {
+					// 	ran.Log.Info("---Sst values in Slice are equal")
+					// } else {
+					// 	ran.Log.Info("---NG-Setup failure: No supported slice exist")
+					// }
 				}
 			}
 		}
