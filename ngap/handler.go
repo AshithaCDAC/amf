@@ -665,7 +665,7 @@ func HandleNGSetupRequest(ran *context.AmfRan, message *ngapType.NGAPPDU) {
 
 	if ie.Value.PLMNSupportList != nil {
 		pLMNSupportList := ie.Value.PLMNSupportList
-		ran.Log.Info("---pLMNSupportList: ", pLMNSupportList)
+		// ran.Log.Info("---pLMNSupportList: ", pLMNSupportList)
 		for _, plmnItem := range amfSelf.PlmnSupportList {
 			pLMNSupportItem := ngapType.PLMNSupportItem{}
 			pLMNSupportItem.PLMNIdentity = ngapConvert.PlmnIdToNgap(plmnItem.PlmnId)
@@ -678,6 +678,15 @@ func HandleNGSetupRequest(ran *context.AmfRan, message *ngapType.NGAPPDU) {
 		}
 		nGSetupResponseIEs.List = append(nGSetupResponseIEs.List, ie)
 		ran.Log.Info("---plmnsupport list from AMF: ", pLMNSupportList.List)
+
+		for _, s_nssai_amf := range pLMNSupportList.List {
+			plmn_identity := s_nssai_amf.PLMNIdentity
+			slice_support_list := s_nssai_amf.SliceSupportList
+			ie_extension := s_nssai_amf.IEExtensions
+			ran.Log.Info("---plmn_identity ", plmn_identity)
+			ran.Log.Infof("---slice_support_list", slice_support_list)
+			ran.Log.Infof("---ie_extension", ie_extension)
+		}
 	}
 
 	// if reflect.DeepEqual(supportedTAI.SNssaiList, pLMNSupportList.List) {
