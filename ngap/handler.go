@@ -505,7 +505,7 @@ func HandleNGSetupRequest(ran *context.AmfRan, message *ngapType.NGAPPDU) {
 	// var amfUe *context.AmfUe
 	// var ue *context.AmfUe
 	var cause ngapType.Cause
-	var sstvalueint int32
+	// var sstvalueint int32
 
 	supportedTAI := context.NewSupportedTAI()
 
