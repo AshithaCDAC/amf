@@ -8,6 +8,7 @@
 package ngap
 
 import (
+	"encoding/binary"
 	"encoding/hex"
 	"os"
 	"strconv"
@@ -505,6 +506,7 @@ func HandleNGSetupRequest(ran *context.AmfRan, message *ngapType.NGAPPDU) {
 	// var amfUe *context.AmfUe
 	// var ue *context.AmfUe
 	var cause ngapType.Cause
+	var sstvalueint int32
 
 	supportedTAI := context.NewSupportedTAI()
 
@@ -703,11 +705,13 @@ func HandleNGSetupRequest(ran *context.AmfRan, message *ngapType.NGAPPDU) {
 					sstvalue := snssai_sst_value.Value
 					ran.Log.Info("---SST from AMF ", sstvalue)
 
-					// if sst == sstvalue {
-					// 	ran.Log.Info("---Sst values in Slice are")
-					// } else {
-					// 	ran.Log.Info("---NG-Setup failure: No supported slice exist")
-					// }
+					sstvalueint = int32(binary.BigEndian.Uint32(sstvalue))
+					ran.Log.Info("---converted integer value of sst: ", sstvalueint)
+					if sst == sstvalueint {
+						ran.Log.Info("---Sst values in Slice are equal")
+					} else {
+						ran.Log.Info("---NG-Setup failure: No supported slice exist")
+					}
 				}
 			}
 		}
