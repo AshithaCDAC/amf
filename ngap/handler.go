@@ -644,67 +644,76 @@ func HandleNGSetupRequest(ran *context.AmfRan, message *ngapType.NGAPPDU) {
 		ran.Log.Infof("---Sd Value in SNssaiList: 0x%v", sd)
 		// ran.Log.Info("---sstlist: ", sstList)
 		// ran.Log.Info("---sdlist: ", sdList)
+
+		ran.Log.Info("---supported SNssailist from gnb: ", supportedTAI.SNssaiList)
+
+		// ran.Log.Info("---value of ie: ", ie)
+		// ran.Log.Info("---value of ie.id: ", ie.Id)
+		// ran.Log.Info("---value of ie.value: ", ie.Value)
+		// ran.Log.Info("---value of iecriticality: ", ie.Criticality)
+		// ran.Log.Info("---value of ie.id.value: ", ie.Id.Value)
+		// ran.Log.Info("---value of ie.value.present: ", ie.Value.Present)
+		// ran.Log.Info("---value of ie.criticality.value: ", ie.Criticality.Value)
+		// ran.Log.Info("---value of ie.Value.PLMNSupportList ", ie.Value.PLMNSupportList)
+
+		ie = ngapType.NGSetupResponseIEs{}
+		ie.Id.Value = ngapType.ProtocolIEIDPLMNSupportList
+		ie.Criticality.Value = ngapType.CriticalityPresentReject
+		ie.Value.Present = ngapType.NGSetupResponseIEsPresentPLMNSupportList
+		ie.Value.PLMNSupportList = new(ngapType.PLMNSupportList)
+
+		if ie.Value.PLMNSupportList != nil {
+			pLMNSupportList := ie.Value.PLMNSupportList
+			// ran.Log.Info("---pLMNSupportList: ", pLMNSupportList)
+			for _, plmnItem := range amfSelf.PlmnSupportList {
+				pLMNSupportItem := ngapType.PLMNSupportItem{}
+				pLMNSupportItem.PLMNIdentity = ngapConvert.PlmnIdToNgap(plmnItem.PlmnId)
+				for _, snssai := range plmnItem.SNssaiList {
+					sliceSupportItem := ngapType.SliceSupportItem{}
+					sliceSupportItem.SNSSAI = ngapConvert.SNssaiToNgap(snssai)
+					pLMNSupportItem.SliceSupportList.List = append(pLMNSupportItem.SliceSupportList.List, sliceSupportItem)
+				}
+				pLMNSupportList.List = append(pLMNSupportList.List, pLMNSupportItem)
+			}
+			nGSetupResponseIEs.List = append(nGSetupResponseIEs.List, ie)
+			ran.Log.Info("---plmnsupport list from AMF: ", pLMNSupportList.List)
+
+			for _, s_nssai_amf := range pLMNSupportList.List {
+				plmn_identity := s_nssai_amf.PLMNIdentity
+				slice_support_list := s_nssai_amf.SliceSupportList
+				ie_extension := s_nssai_amf.IEExtensions
+				ran.Log.Info("---plmn_identity ", plmn_identity)
+				ran.Log.Info("---slice_support_list", slice_support_list)
+				ran.Log.Info("---ie_extension", ie_extension)
+
+				for _, slice_supportlist_list := range s_nssai_amf.SliceSupportList.List {
+					slice_support_item_snssai := slice_supportlist_list.SNSSAI
+					slice_support_item_ieexten := slice_supportlist_list.IEExtensions
+					ran.Log.Info("---SNSSAI ", slice_support_item_snssai)
+					ran.Log.Info("---IEExtensions ", slice_support_item_ieexten)
+
+					slicesupplist_list_nssai := slice_supportlist_list.SNSSAI
+					snssai_sst_value := slicesupplist_list_nssai.SST
+					snssai_sd_value := slicesupplist_list_nssai.SD
+					snnsai_ieexten := slicesupplist_list_nssai.IEExtensions
+					ran.Log.Info("---SST ", snssai_sst_value)
+					ran.Log.Info("---SD ", snssai_sd_value)
+					ran.Log.Info("---IEEXTENSION ", snnsai_ieexten)
+
+					sstvalue := snssai_sst_value.Value
+					ran.Log.Info("---SST from AMF ", sstvalue)
+
+					// if sst == sstvalue {
+					// 	ran.Log.Info("---Sst values in Slice are")
+					// } else {
+					// 	ran.Log.Info("---NG-Setup failure: No supported slice exist")
+					// }
+				}
+			}
+		}
 	}
 
-	ran.Log.Info("---supported SNssailist from gnb: ", supportedTAI.SNssaiList)
-
-	// ran.Log.Info("---value of ie: ", ie)
-	// ran.Log.Info("---value of ie.id: ", ie.Id)
-	// ran.Log.Info("---value of ie.value: ", ie.Value)
-	// ran.Log.Info("---value of iecriticality: ", ie.Criticality)
-	// ran.Log.Info("---value of ie.id.value: ", ie.Id.Value)
-	// ran.Log.Info("---value of ie.value.present: ", ie.Value.Present)
-	// ran.Log.Info("---value of ie.criticality.value: ", ie.Criticality.Value)
-	// ran.Log.Info("---value of ie.Value.PLMNSupportList ", ie.Value.PLMNSupportList)
-
-	ie = ngapType.NGSetupResponseIEs{}
-	ie.Id.Value = ngapType.ProtocolIEIDPLMNSupportList
-	ie.Criticality.Value = ngapType.CriticalityPresentReject
-	ie.Value.Present = ngapType.NGSetupResponseIEsPresentPLMNSupportList
-	ie.Value.PLMNSupportList = new(ngapType.PLMNSupportList)
-
-	if ie.Value.PLMNSupportList != nil {
-		pLMNSupportList := ie.Value.PLMNSupportList
-		// ran.Log.Info("---pLMNSupportList: ", pLMNSupportList)
-		for _, plmnItem := range amfSelf.PlmnSupportList {
-			pLMNSupportItem := ngapType.PLMNSupportItem{}
-			pLMNSupportItem.PLMNIdentity = ngapConvert.PlmnIdToNgap(plmnItem.PlmnId)
-			for _, snssai := range plmnItem.SNssaiList {
-				sliceSupportItem := ngapType.SliceSupportItem{}
-				sliceSupportItem.SNSSAI = ngapConvert.SNssaiToNgap(snssai)
-				pLMNSupportItem.SliceSupportList.List = append(pLMNSupportItem.SliceSupportList.List, sliceSupportItem)
-			}
-			pLMNSupportList.List = append(pLMNSupportList.List, pLMNSupportItem)
-		}
-		nGSetupResponseIEs.List = append(nGSetupResponseIEs.List, ie)
-		ran.Log.Info("---plmnsupport list from AMF: ", pLMNSupportList.List)
-
-		for _, s_nssai_amf := range pLMNSupportList.List {
-			plmn_identity := s_nssai_amf.PLMNIdentity
-			slice_support_list := s_nssai_amf.SliceSupportList
-			ie_extension := s_nssai_amf.IEExtensions
-			ran.Log.Info("---plmn_identity ", plmn_identity)
-			ran.Log.Info("---slice_support_list", slice_support_list)
-			ran.Log.Info("---ie_extension", ie_extension)
-
-			for _, slice_supportlist_list := range s_nssai_amf.SliceSupportList.List {
-				slice_support_item_snssai := slice_supportlist_list.SNSSAI
-				slice_support_item_ieexten := slice_supportlist_list.IEExtensions
-				ran.Log.Info("---SNSSAI ", slice_support_item_snssai)
-				ran.Log.Info("---IEExtensions ", slice_support_item_ieexten)
-
-				slicesupplist_list_nssai := slice_supportlist_list.SNSSAI
-				snssai_sst_value := slicesupplist_list_nssai.SST
-				snssai_sd_value := slicesupplist_list_nssai.SD
-				snnsai_ieexten := slicesupplist_list_nssai.IEExtensions
-				ran.Log.Info("---SST ", snssai_sst_value)
-				ran.Log.Info("---SD ", snssai_sd_value)
-				ran.Log.Info("---IEEXTENSION ", snnsai_ieexten)
-			}
-		}
-	}
-
-	// if reflect.DeepEqual(supportedTAI.SNssaiList, pLMNSupportList.List) {
+	// if reflect.DeepEqual(, pLMNSupportList.List) {
 	// 	ran.Log.Info("---inside the deepequal comparison")
 	// 	ran.Log.Info("---Slice values are equal")
 	// } else {
