@@ -694,8 +694,12 @@ func HandleNGSetupRequest(ran *context.AmfRan, message *ngapType.NGAPPDU) {
 					sdvalue := snssai_sd_value.Value
 					ran.Log.Info("---SD from AMF: ", sdvalue)
 
-					bytesd := string(sdvalue)
-					ran.Log.Info("---bytestringsd: ", bytesd)
+					// bytesd := string(sdvalue)
+					// ran.Log.Info("---bytestringsd: ", bytesd)
+					for _, bytesd := range sdvalue {
+						ran.Log.Info("---inside the for loop")
+						ran.Log.Info("---value of each byte:", bytesd)
+					}
 
 					sstvalue := snssai_sst_value.Value
 					ran.Log.Info("---SST from AMF: ", sstvalue)
