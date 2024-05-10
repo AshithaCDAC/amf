@@ -699,7 +699,11 @@ func HandleNGSetupRequest(ran *context.AmfRan, message *ngapType.NGAPPDU) {
 					ran.Log.Info("---SD from AMF: ", sdvalue)
 
 					buf := bytes.NewReader(sdvalue)
-					binary.Read(buf, binary.BigEndian, &convertedval)
+					err := binary.Read(buf, binary.BigEndian, &convertedval)
+					if err != nil {
+						ran.Log.Info("Error: ", err)
+						return
+					}
 					ran.Log.Info("---converted SD value", convertedval)
 
 					// int32ValofSD := octetStringToInt32(sdvalue, binary.BigEndian) // Specify endianess
