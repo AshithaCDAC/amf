@@ -8,6 +8,7 @@
 package ngap
 
 import (
+	"bytes"
 	"encoding/binary"
 	"encoding/hex"
 	"os"
@@ -507,6 +508,7 @@ func HandleNGSetupRequest(ran *context.AmfRan, message *ngapType.NGAPPDU) {
 	// var ue *context.AmfUe
 	var cause ngapType.Cause
 	// var sstvalueint int32
+	var convertedval int32
 
 	supportedTAI := context.NewSupportedTAI()
 
@@ -696,8 +698,12 @@ func HandleNGSetupRequest(ran *context.AmfRan, message *ngapType.NGAPPDU) {
 					sdvalue := snssai_sd_value.Value
 					ran.Log.Info("---SD from AMF: ", sdvalue)
 
-					int32ValofSD := octetStringToInt32(sdvalue, binary.BigEndian) // Specify endianess
-					ran.Log.Info("---converted value of sd", int32ValofSD)
+					buf := bytes.NewReader(sdvalue)
+					binary.Read(buf, binary.BigEndian, &convertedval)
+					ran.Log.Info("---converted SD value", convertedval)
+
+					// int32ValofSD := octetStringToInt32(sdvalue, binary.BigEndian) // Specify endianess
+					// ran.Log.Info("---converted value of sd", int32ValofSD)
 
 					sstvalue := snssai_sst_value.Value
 					ran.Log.Info("---SST from AMF: ", sstvalue)
@@ -4902,13 +4908,13 @@ func buildCriticalityDiagnosticsIEItem(ieCriticality aper.Enumerated, ieID int64
 	return item
 }
 
-func octetStringToInt32(octetString []byte, endian binary.ByteOrder) int32 {
-	// Convert octet string to int32
-	var sdvalueint int32
-	if endian == binary.BigEndian {
-		sdvalueint = int32(binary.BigEndian.Uint32(octetString))
-	} else {
-		sdvalueint = int32(binary.LittleEndian.Uint32(octetString))
-	}
-	return sdvalueint
-}
+// func octetStringToInt32(octetString []byte, endian binary.ByteOrder) int32 {
+// 	// Convert octet string to int32
+// 	var sdvalueint int32
+// 	if endian == binary.BigEndian {
+// 		sdvalueint = int32(binary.BigEndian.Uint32(octetString))
+// 	} else {
+// 		sdvalueint = int32(binary.LittleEndian.Uint32(octetString))
+// 	}
+// 	return sdvalueint
+// }
