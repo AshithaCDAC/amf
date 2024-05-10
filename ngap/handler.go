@@ -8,6 +8,7 @@
 package ngap
 
 import (
+	"encoding/binary"
 	"encoding/hex"
 	"os"
 	"strconv"
@@ -648,15 +649,6 @@ func HandleNGSetupRequest(ran *context.AmfRan, message *ngapType.NGAPPDU) {
 
 		ran.Log.Info("---supported SNssailist from gnb: ", supportedTAI.SNssaiList)
 
-		// ran.Log.Info("---value of ie: ", ie)
-		// ran.Log.Info("---value of ie.id: ", ie.Id)
-		// ran.Log.Info("---value of ie.value: ", ie.Value)
-		// ran.Log.Info("---value of iecriticality: ", ie.Criticality)
-		// ran.Log.Info("---value of ie.id.value: ", ie.Id.Value)
-		// ran.Log.Info("---value of ie.value.present: ", ie.Value.Present)
-		// ran.Log.Info("---value of ie.criticality.value: ", ie.Criticality.Value)
-		// ran.Log.Info("---value of ie.Value.PLMNSupportList ", ie.Value.PLMNSupportList)
-
 		ie = ngapType.NGSetupResponseIEs{}
 		ie.Id.Value = ngapType.ProtocolIEIDPLMNSupportList
 		ie.Criticality.Value = ngapType.CriticalityPresentReject
@@ -703,7 +695,9 @@ func HandleNGSetupRequest(ran *context.AmfRan, message *ngapType.NGAPPDU) {
 
 					sdvalue := snssai_sd_value.Value
 					ran.Log.Info("---SD from AMF: ", sdvalue)
-					ran.Log.Infof("---SD from AMF: %d", sdvalue)
+
+					int32ValofSD := octetStringToInt32(sdvalue, binary.BigEndian) // Specify endianess
+					ran.Log.Info("---converted value of sd", int32ValofSD)
 
 					sstvalue := snssai_sst_value.Value
 					ran.Log.Info("---SST from AMF: ", sstvalue)
@@ -4908,13 +4902,13 @@ func buildCriticalityDiagnosticsIEItem(ieCriticality aper.Enumerated, ieID int64
 	return item
 }
 
-// func octetStringToInt32(sdvalue []byte, endian binary.ByteOrder) int32 {
-//     // Convert octet string to int32
-//     var sdvalueint int32
-//     if endian == binary.BigEndian {
-//         sdvalueint = int32(binary.BigEndian.Uint32(sdvalue))
-//     } else {
-//         intValue = int32(binary.LittleEndian.Uint32(sdvalue))
-//     }
-//     return intValue
-// }
+func octetStringToInt32(octetString []byte, endian binary.ByteOrder) int32 {
+	// Convert octet string to int32
+	var sdvalueint int32
+	if endian == binary.BigEndian {
+		sdvalueint = int32(binary.BigEndian.Uint32(octetString))
+	} else {
+		sdvalueint = int32(binary.LittleEndian.Uint32(octetString))
+	}
+	return sdvalueint
+}
