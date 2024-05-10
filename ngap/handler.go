@@ -696,7 +696,10 @@ func HandleNGSetupRequest(ran *context.AmfRan, message *ngapType.NGAPPDU) {
 					sstvalue := snssai_sst_value.Value
 					ran.Log.Info("---SST from AMF: ", sstvalue)
 
-					ran.Log.Infof("---converted string value of SD: %s", sdvalue)
+					// a := sdvalue
+					// ran.Log.Infof("---converted string value of SD: %s", a)
+
+					// ran.Log.Infof("---converted string value of SD: %s", sdvalue)
 
 					convvalue := string(sdvalue)
 					ran.Log.Info("---converted string value of SD:", convvalue)
