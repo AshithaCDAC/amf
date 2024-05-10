@@ -706,7 +706,7 @@ func HandleNGSetupRequest(ran *context.AmfRan, message *ngapType.NGAPPDU) {
 					// ran.Log.Infof("string value of sd %o", sdvalue)
 
 					stringsd := fmt.Sprintf("string value of sd %o", sdvalue)
-					ran.Log.Info("---string SD: ", stringsd)
+					ran.Log.Info(stringsd)
 
 					sstvalue := snssai_sst_value.Value
 					ran.Log.Info("---SST from AMF: ", sstvalue)
