@@ -11,6 +11,7 @@ import (
 	"encoding/hex"
 	"fmt"
 	"os"
+	"reflect"
 	"strconv"
 
 	"github.com/omec-project/amf/consumer"
@@ -712,8 +713,10 @@ func HandleNGSetupRequest(ran *context.AmfRan, message *ngapType.NGAPPDU) {
 					}
 					ran.Log.Info("stringsd:", concatenatedString)
 
-					intsd, err := strconv.Atoi(concatenatedString)
-					ran.Log.Info("integer value of SD:", intsd, err)
+					// intsd, err := strconv.Atoi(concatenatedString)
+					// ran.Log.Info("integer value of SD:", intsd, err)
+					intVar, err := strconv.Atoi(concatenatedString)
+					ran.Log.Info("intsd: ", intVar, err, reflect.TypeOf(intVar))
 
 					sstvalue := snssai_sst_value.Value
 					ran.Log.Info("---SST from AMF: ", sstvalue)
