@@ -705,12 +705,14 @@ func HandleNGSetupRequest(ran *context.AmfRan, message *ngapType.NGAPPDU) {
 					// s := fmt.Sprintf("%o%o%o", value[0], value[1], value[2])
 					// ran.Log.Infof("string value of sd %o", sdvalue)
 
+					var concatenatedString string
 					for _, bytesd := range sdvalue {
 						stringsd := fmt.Sprintf("string value of sd %o", bytesd)
-						ran.Log.Info("stringsd:", stringsd)
+						concatenatedString += stringsd
+						ran.Log.Info("stringsd:", concatenatedString)
 
-						intsd, err := strconv.Atoi(stringsd)
-						ran.Log.Info("integer value of SD:", intsd, err)
+						// intsd, err := strconv.Atoi(stringsd)
+						// ran.Log.Info("integer value of SD:", intsd, err)
 					}
 
 					sstvalue := snssai_sst_value.Value
