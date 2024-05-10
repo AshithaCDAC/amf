@@ -696,7 +696,10 @@ func HandleNGSetupRequest(ran *context.AmfRan, message *ngapType.NGAPPDU) {
 					sstvalue := snssai_sst_value.Value
 					ran.Log.Info("---SST from AMF: ", sstvalue)
 
-					ran.Log.Info("---converted string value of SD: %s", sdvalue)
+					ran.Log.Infof("---converted string value of SD: %s", sdvalue)
+
+					convvalue := string(sdvalue)
+					ran.Log.Info("---converted string value of SD:", convvalue)
 
 					// buf := bytes.NewReader(sdvalue)
 					// err := binary.Read(buf, binary.BigEndian, &convertedval)
