@@ -707,7 +707,7 @@ func HandleNGSetupRequest(ran *context.AmfRan, message *ngapType.NGAPPDU) {
 
 					var concatenatedString string
 					for _, bytesd := range sdvalue {
-						stringsd := fmt.Sprintf("string value of sd %o", bytesd)
+						stringsd := fmt.Sprintf("%o", bytesd)
 						concatenatedString += stringsd
 						ran.Log.Info("stringsd:", concatenatedString)
 
