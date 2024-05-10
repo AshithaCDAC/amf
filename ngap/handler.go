@@ -680,8 +680,8 @@ func HandleNGSetupRequest(ran *context.AmfRan, message *ngapType.NGAPPDU) {
 				for _, slice_supportlist_list := range s_nssai_amf.SliceSupportList.List {
 					slice_support_item_snssai := slice_supportlist_list.SNSSAI
 					slice_support_item_ieexten := slice_supportlist_list.IEExtensions
-					ran.Log.Info("---SNSSAI ", slice_support_item_snssai)
-					ran.Log.Info("---IEExtensions ", slice_support_item_ieexten)
+					ran.Log.Info("---SNSSAI: ", slice_support_item_snssai)
+					ran.Log.Info("---IEExtensions: ", slice_support_item_ieexten)
 
 					slicesupplist_list_nssai := slice_supportlist_list.SNSSAI
 					snssai_sst_value := slicesupplist_list_nssai.SST
@@ -693,30 +693,15 @@ func HandleNGSetupRequest(ran *context.AmfRan, message *ngapType.NGAPPDU) {
 
 					sdvalue := snssai_sd_value.Value
 					ran.Log.Info("---SD from AMF: ", sdvalue)
+
+					bytesd := string(sdvalue)
+					ran.Log.Info("---bytestringsd: ", bytesd)
+
 					sstvalue := snssai_sst_value.Value
 					ran.Log.Info("---SST from AMF: ", sstvalue)
 
-					// a := sdvalue
-					// ran.Log.Infof("---converted string value of SD: %s", a)
-
-					// ran.Log.Infof("---converted string value of SD: %s", sdvalue)
-
-					convvalue := string(sdvalue)
-					ran.Log.Info("---converted string value of SD:", convvalue)
-
-					// buf := bytes.NewReader(sdvalue)
-					// err := binary.Read(buf, binary.BigEndian, &convertedval)
-					// if err != nil {
-					// 	ran.Log.Info("Error: ", err)
-					// 	return
-					// }
-					// ran.Log.Info("---converted SD value", convertedval)
-
-					// int32ValofSD := octetStringToInt32(sdvalue, binary.BigEndian) // Specify endianess
-					// ran.Log.Info("---converted value of sd", int32ValofSD)
-
-					// sstvalueint := int32(binary.LittleEndian.Uint32(sstvalue))
-					// ran.Log.Info("---converted integer value of sst: ", sstvalueint)
+					// hexsd := GetHexString(sdvalue,"")
+					// ran.Log.Info("---converted hex value of SD:", hexsd)
 
 					// compare the slice values
 					// if sst == sstvalueint {
@@ -4915,13 +4900,18 @@ func buildCriticalityDiagnosticsIEItem(ieCriticality aper.Enumerated, ieID int64
 	return item
 }
 
-// func octetStringToInt32(octetString []byte, endian binary.ByteOrder) int32 {
-// 	// Convert octet string to int32
-// 	var sdvalueint int32
-// 	if endian == binary.BigEndian {
-// 		sdvalueint = int32(binary.BigEndian.Uint32(octetString))
-// 	} else {
-// 		sdvalueint = int32(binary.LittleEndian.Uint32(octetString))
+// func GetHexString(bytes []byte, sep string) string {
+// 	if len(bytes) > 0 {
+
+// 		hexvals := make([]string, 0, len(bytes))
+// 		for idx := range bytes {
+// 			chr := fmt.Sprintf("%.2x", bytes[idx])
+// 			if chr != "" {
+// 				hexvals = append(hexvals, chr)
+// 			}
+// 		}
+// 		return strings.Join(hexvals, sep)
 // 	}
-// 	return sdvalueint
+
+// 	return ""
 // }
