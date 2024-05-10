@@ -8,8 +8,6 @@
 package ngap
 
 import (
-	"bytes"
-	"encoding/binary"
 	"encoding/hex"
 	"os"
 	"strconv"
@@ -507,8 +505,6 @@ func HandleNGSetupRequest(ran *context.AmfRan, message *ngapType.NGAPPDU) {
 	// var amfUe *context.AmfUe
 	// var ue *context.AmfUe
 	var cause ngapType.Cause
-	// var sstvalueint int32
-	var convertedval int32
 
 	supportedTAI := context.NewSupportedTAI()
 
@@ -697,20 +693,21 @@ func HandleNGSetupRequest(ran *context.AmfRan, message *ngapType.NGAPPDU) {
 
 					sdvalue := snssai_sd_value.Value
 					ran.Log.Info("---SD from AMF: ", sdvalue)
+					sstvalue := snssai_sst_value.Value
+					ran.Log.Info("---SST from AMF: ", sstvalue)
 
-					buf := bytes.NewReader(sdvalue)
-					err := binary.Read(buf, binary.BigEndian, &convertedval)
-					if err != nil {
-						ran.Log.Info("Error: ", err)
-						return
-					}
-					ran.Log.Info("---converted SD value", convertedval)
+					ran.Log.Info("---converted string value of SD: %s", sdvalue)
+
+					// buf := bytes.NewReader(sdvalue)
+					// err := binary.Read(buf, binary.BigEndian, &convertedval)
+					// if err != nil {
+					// 	ran.Log.Info("Error: ", err)
+					// 	return
+					// }
+					// ran.Log.Info("---converted SD value", convertedval)
 
 					// int32ValofSD := octetStringToInt32(sdvalue, binary.BigEndian) // Specify endianess
 					// ran.Log.Info("---converted value of sd", int32ValofSD)
-
-					sstvalue := snssai_sst_value.Value
-					ran.Log.Info("---SST from AMF: ", sstvalue)
 
 					// sstvalueint := int32(binary.LittleEndian.Uint32(sstvalue))
 					// ran.Log.Info("---converted integer value of sst: ", sstvalueint)
