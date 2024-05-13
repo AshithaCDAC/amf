@@ -11,7 +11,6 @@ import (
 	"encoding/hex"
 	"fmt"
 	"os"
-	"reflect"
 	"strconv"
 
 	"github.com/omec-project/amf/consumer"
@@ -693,39 +692,38 @@ func HandleNGSetupRequest(ran *context.AmfRan, message *ngapType.NGAPPDU) {
 					ran.Log.Info("---SD: ", snssai_sd_value)
 					ran.Log.Info("---IEEXTENSION: ", snnsai_ieexten)
 
+					// SD VALUE
 					sdvalue := snssai_sd_value.Value
 					ran.Log.Info("---SD from AMF: ", sdvalue)
 
-					// bytesd := string(sdvalue)
-					// ran.Log.Info("---bytestringsd: ", bytesd)
-					// for _, bytesd := range sdvalue {
-					// 	ran.Log.Info("---inside the for loop")
-					// 	ran.Log.Info("---value of each byte:", bytesd)
-					// }
+					strsdvalue := fmt.Sprintf("%o%o%o", sdvalue[0], sdvalue[1], sdvalue[2])
+					ran.Log.Info("stringsd:", strsdvalue)
 
-					// s := fmt.Sprintf("%o%o%o", value[0], value[1], value[2])
-					// ran.Log.Infof("string value of sd %o", sdvalue)
+					// intsdvalue, err := strconv.Atoi(strsdvalue)
+					// ran.Log.Info("integer value of SD:", intsdvalue, err)
 
-					var concatenatedString string
-					for _, bytesd := range sdvalue {
-						stringsd := fmt.Sprintf("%o", bytesd)
-						concatenatedString += stringsd
-					}
-					ran.Log.Info("stringsd:", concatenatedString)
-
-					// intsd, err := strconv.Atoi(concatenatedString)
-					// ran.Log.Info("integer value of SD:", intsd, err)
-					intVar, err := strconv.Atoi(concatenatedString)
-					ran.Log.Info("intsd: ", intVar, err, reflect.TypeOf(intVar))
-
+					// SST VALUE
 					sstvalue := snssai_sst_value.Value
 					ran.Log.Info("---SST from AMF: ", sstvalue)
 
-					// hexsd := GetHexString(sdvalue,"")
-					// ran.Log.Info("---converted hex value of SD:", hexsd)
+					strsstvalue := fmt.Sprintf("%o%o%o", sstvalue[0], sstvalue[1], sstvalue[2])
+					ran.Log.Info("stringsst:", strsstvalue)
 
+					intsstvalue, err := strconv.ParseInt(strsstvalue, 10, 32)
+					if err != nil {
+						ran.Log.Info("error in Parsing")
+					}
+					intsst := int32(intsstvalue)
+					ran.Log.Info("Int32 value of sst: ", intsst)
+
+					if sst == intsst {
+						ran.Log.Info("sst values are equal")
+					}
+					if sd == strsdvalue {
+						ran.Log.Info("sd values are equal")
+					}
 					// compare the slice values
-					// if sst == sstvalueint {
+					// if sd == intsd {
 					// 	ran.Log.Info("---Sst values in Slice are equal")
 					// } else {
 					// 	ran.Log.Info("---NG-Setup failure: No supported slice exist")
