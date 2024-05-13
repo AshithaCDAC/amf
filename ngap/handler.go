@@ -770,11 +770,13 @@ func HandleNGSetupRequest(ran *context.AmfRan, message *ngapType.NGAPPDU) {
 				break
 			}
 		}
+
 		var flags bool
 		if context.Inslicelist(gnbslicelist, amfslicelist) {
 			flags = true
 		}
-		if !found && !flags {
+
+		if !found || !flags {
 			ran.Log.Warn("NG-Setup failure: Cannot find Served TAI in AMF")
 			cause.Present = ngapType.CausePresentMisc
 			cause.Misc = &ngapType.CauseMisc{
