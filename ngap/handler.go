@@ -643,6 +643,9 @@ func HandleNGSetupRequest(ran *context.AmfRan, message *ngapType.NGAPPDU) {
 		// ran.Log.Info("---value of s_nssai: ", s_nssai)
 		ran.Log.Info("---Sst Value in SNssaiList: ", sst)
 		ran.Log.Info("---Sd Value in SNssaiList: ", sd)
+
+		intsdvaluegnb, err := strconv.Atoi(sd)
+		ran.Log.Info("integer value of SD:", intsdvaluegnb, err)
 		// ran.Log.Info("---sstlist: ", sstList)
 		// ran.Log.Info("---sdlist: ", sdList)
 
@@ -696,17 +699,11 @@ func HandleNGSetupRequest(ran *context.AmfRan, message *ngapType.NGAPPDU) {
 					sdvalue := snssai_sd_value.Value
 					ran.Log.Info("---SD from AMF: ", sdvalue)
 
-					var str string
-					for _, s := range sdvalue {
-						str += string(s)
-					}
-					ran.Log.Info("new string SD: ", str)
+					strsdvalue := fmt.Sprintf("%o%o%o", sdvalue[0], sdvalue[1], sdvalue[2])
+					ran.Log.Info("stringsd:", strsdvalue)
 
-					// strsdvalue := fmt.Sprintf("%o%o%o", sdvalue[0], sdvalue[1], sdvalue[2])
-					// ran.Log.Info("stringsd:", strsdvalue)
-
-					// intsdvalue, err := strconv.Atoi(strsdvalue)
-					// ran.Log.Info("integer value of SD:", intsdvalue, err)
+					intsdvalueamf, err := strconv.Atoi(strsdvalue)
+					ran.Log.Info("integer value of SD:", intsdvalueamf, err)
 
 					// SST VALUE
 					sstvalue := snssai_sst_value.Value
@@ -725,7 +722,7 @@ func HandleNGSetupRequest(ran *context.AmfRan, message *ngapType.NGAPPDU) {
 					if sst == intsst {
 						ran.Log.Info("sst values are equal")
 					}
-					if sd == str {
+					if intsdvaluegnb == intsdvalueamf {
 						ran.Log.Info("sd values are equal")
 					} else {
 						ran.Log.Info("sd values not equal")
