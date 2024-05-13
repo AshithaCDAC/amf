@@ -739,7 +739,6 @@ func HandleNGSetupRequest(ran *context.AmfRan, message *ngapType.NGAPPDU) {
 					// } else {
 					// 	ran.Log.Info("Slice lists Not equal")
 					// }
-
 				}
 			}
 		}
@@ -799,7 +798,6 @@ func HandleNGSetupRequest(ran *context.AmfRan, message *ngapType.NGAPPDU) {
 	} else {
 		ngap_message.SendNGSetupFailure(ran, cause)
 	}
-
 }
 
 func HandleUplinkNasTransport(ran *context.AmfRan, message *ngapType.NGAPPDU) {
