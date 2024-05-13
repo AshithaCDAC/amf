@@ -780,20 +780,24 @@ func HandleNGSetupRequest(ran *context.AmfRan, message *ngapType.NGAPPDU) {
 		}
 	}
 
-	if cause.Present == ngapType.CausePresentNothing && reflect.DeepEqual(gnbslicelist, amfslicelist) {
+	if cause.Present == ngapType.CausePresentNothing {
 		// if cause.Present == ngapType.CausePresentNothing && reflect.DeepEqual(gnbslicelist,amfslicelist) {
+		if reflect.DeepEqual(gnbslicelist, amfslicelist) {
+			ngap_message.SendNGSetupResponse(ran)
+			// send nf(gnb) status notification
+			gnbStatus := mi.MetricEvent{
+				EventType: mi.CNfStatusEvt,
+				NfStatusData: mi.CNfStatus{
+					NfType:   mi.NfTypeGnb,
+					NfStatus: mi.NfStatusConnected, NfName: ran.GnbId,
+				},
+			}
 
-		ngap_message.SendNGSetupResponse(ran)
-		// send nf(gnb) status notification
-		gnbStatus := mi.MetricEvent{
-			EventType: mi.CNfStatusEvt,
-			NfStatusData: mi.CNfStatus{
-				NfType:   mi.NfTypeGnb,
-				NfStatus: mi.NfStatusConnected, NfName: ran.GnbId,
-			},
-		}
-		if err := metrics.StatWriter.PublishNfStatusEvent(gnbStatus); err != nil {
-			ran.Log.Errorf("Could not publish NfStatusEvent: %v", err)
+			if err := metrics.StatWriter.PublishNfStatusEvent(gnbStatus); err != nil {
+				ran.Log.Errorf("Could not publish NfStatusEvent: %v", err)
+			}
+		} else {
+			ngap_message.SendNGSetupFailure(ran, cause)
 		}
 	} else {
 		ngap_message.SendNGSetupFailure(ran, cause)
