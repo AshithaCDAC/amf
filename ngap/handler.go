@@ -642,7 +642,7 @@ func HandleNGSetupRequest(ran *context.AmfRan, message *ngapType.NGAPPDU) {
 		// sdList = append(sdList, sd)
 		// ran.Log.Info("---value of s_nssai: ", s_nssai)
 		ran.Log.Info("---Sst Value in SNssaiList: ", sst)
-		ran.Log.Infof("---Sd Value in SNssaiList: ", sd)
+		ran.Log.Info("---Sd Value in SNssaiList: ", sd)
 		// ran.Log.Info("---sstlist: ", sstList)
 		// ran.Log.Info("---sdlist: ", sdList)
 
