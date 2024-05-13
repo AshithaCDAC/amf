@@ -11,6 +11,7 @@ import (
 	"encoding/hex"
 	"fmt"
 	"os"
+	"reflect"
 	"strconv"
 
 	"github.com/omec-project/amf/consumer"
@@ -645,7 +646,7 @@ func HandleNGSetupRequest(ran *context.AmfRan, message *ngapType.NGAPPDU) {
 		ran.Log.Info("---Sd Value in SNssaiList: ", sd)
 
 		intsdvaluegnb, err := strconv.Atoi(sd)
-		ran.Log.Info("integer value of SD:", intsdvaluegnb, err)
+		ran.Log.Info("integer value of SD gnb:", intsdvaluegnb, err)
 		// ran.Log.Info("---sstlist: ", sstList)
 		// ran.Log.Info("---sdlist: ", sdList)
 
@@ -703,7 +704,7 @@ func HandleNGSetupRequest(ran *context.AmfRan, message *ngapType.NGAPPDU) {
 					ran.Log.Info("stringsd:", strsdvalue)
 
 					intsdvalueamf, err := strconv.Atoi(strsdvalue)
-					ran.Log.Info("integer value of SD:", intsdvalueamf, err)
+					ran.Log.Info("integer value of SD amf:", intsdvalueamf, err)
 
 					// SST VALUE
 					sstvalue := snssai_sst_value.Value
@@ -728,13 +729,13 @@ func HandleNGSetupRequest(ran *context.AmfRan, message *ngapType.NGAPPDU) {
 						ran.Log.Info("sd values not equal")
 					}
 
-					// gnbslicelist := []interface{}{sst,sd}
-					// amfslicelist := []interface{}{intsst,strsdvalue}
-					// if reflect.DeepEqual(gnbslicelist,amfslicelist){
-					// 	ran.Log.Info("Slice lists are equal")
-					// } else {
-					// 	ran.Log.Info("Slice lists Not equal")
-					// }
+					gnbslicelist := []interface{}{sst, intsdvaluegnb}
+					amfslicelist := []interface{}{intsst, intsdvalueamf}
+					if reflect.DeepEqual(gnbslicelist, amfslicelist) {
+						ran.Log.Info("Slice lists are equal")
+					} else {
+						ran.Log.Info("Slice lists Not equal")
+					}
 				}
 			}
 		}
