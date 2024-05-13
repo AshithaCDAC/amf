@@ -508,6 +508,9 @@ func HandleNGSetupRequest(ran *context.AmfRan, message *ngapType.NGAPPDU) {
 	// var ue *context.AmfUe
 	var cause ngapType.Cause
 
+	var gnbslicelist []interface{}
+	var amfslicelist []interface{}
+
 	supportedTAI := context.NewSupportedTAI()
 
 	amfSelf := context.AMF_Self()
@@ -729,72 +732,74 @@ func HandleNGSetupRequest(ran *context.AmfRan, message *ngapType.NGAPPDU) {
 						ran.Log.Info("sd values not equal")
 					}
 
-					gnbslicelist := []interface{}{sst, intsdvaluegnb}
-					amfslicelist := []interface{}{intsst, intsdvalueamf}
+					gnbslicelist = append(gnbslicelist, sst, intsdvaluegnb)
+					amfslicelist = append(amfslicelist, intsst, intsdvalueamf)
 					// if reflect.DeepEqual(gnbslicelist, amfslicelist) {
 					// 	ran.Log.Info("Slice lists are equal")
 					// } else {
 					// 	ran.Log.Info("Slice lists Not equal")
 					// }
 
-					if len(ran.SupportedTAList) == 0 {
-						ran.Log.Warn("NG-Setup failure: No supported TA exist in NG-Setup request")
-						cause.Present = ngapType.CausePresentMisc
-						cause.Misc = &ngapType.CauseMisc{
-							Value: ngapType.CauseMiscPresentUnspecified,
-						}
-					} else {
-						var found bool
-						taiList := make([]models.Tai, len(context.AMF_Self().SupportTaiLists))
-						copy(taiList, context.AMF_Self().SupportTaiLists)
-						for i := range taiList {
-							taiList[i].Tac = util.TACConfigToModels(taiList[i].Tac)
-							ran.Log.Infof("Supported Tai List in AMF Plmn: %v, Tac: 0x%v Tac: %v", taiList[i].PlmnId, taiList[i].Tac, context.AMF_Self().SupportTaiLists[i].Tac)
-						}
-
-						for i, tai := range ran.SupportedTAList {
-							ran.Log.Info("---inside the for loop")
-							if context.InTaiList(tai.Tai, taiList) {
-								ran.Log.Info("---taiList: ", taiList)
-								ran.Log.Info("---tai.Tai: ", tai.Tai)
-								ran.Log.Info("---tai.SNssaiList: ", tai.SNssaiList)
-								ran.Log.Tracef("SERVED_TAI_INDEX[%d]", i)
-								ran.Log.Infof("---SERVED_TAI_INDEX[%d]", i)
-								found = true
-								break
-							}
-						}
-						if !found {
-							ran.Log.Warn("NG-Setup failure: Cannot find Served TAI in AMF")
-							cause.Present = ngapType.CausePresentMisc
-							cause.Misc = &ngapType.CauseMisc{
-								Value: ngapType.CauseMiscPresentUnknownPLMN,
-							}
-						}
-					}
-
-					if cause.Present == ngapType.CausePresentNothing && reflect.DeepEqual(gnbslicelist, amfslicelist) {
-						// if cause.Present == ngapType.CausePresentNothing && reflect.DeepEqual(gnbslicelist,amfslicelist) {
-
-						ngap_message.SendNGSetupResponse(ran)
-						// send nf(gnb) status notification
-						gnbStatus := mi.MetricEvent{
-							EventType: mi.CNfStatusEvt,
-							NfStatusData: mi.CNfStatus{
-								NfType:   mi.NfTypeGnb,
-								NfStatus: mi.NfStatusConnected, NfName: ran.GnbId,
-							},
-						}
-						if err := metrics.StatWriter.PublishNfStatusEvent(gnbStatus); err != nil {
-							ran.Log.Errorf("Could not publish NfStatusEvent: %v", err)
-						}
-					} else {
-						ngap_message.SendNGSetupFailure(ran, cause)
-					}
 				}
 			}
 		}
 	}
+
+	if len(ran.SupportedTAList) == 0 {
+		ran.Log.Warn("NG-Setup failure: No supported TA exist in NG-Setup request")
+		cause.Present = ngapType.CausePresentMisc
+		cause.Misc = &ngapType.CauseMisc{
+			Value: ngapType.CauseMiscPresentUnspecified,
+		}
+	} else {
+		var found bool
+		taiList := make([]models.Tai, len(context.AMF_Self().SupportTaiLists))
+		copy(taiList, context.AMF_Self().SupportTaiLists)
+		for i := range taiList {
+			taiList[i].Tac = util.TACConfigToModels(taiList[i].Tac)
+			ran.Log.Infof("Supported Tai List in AMF Plmn: %v, Tac: 0x%v Tac: %v", taiList[i].PlmnId, taiList[i].Tac, context.AMF_Self().SupportTaiLists[i].Tac)
+		}
+
+		for i, tai := range ran.SupportedTAList {
+			ran.Log.Info("---inside the for loop")
+			if context.InTaiList(tai.Tai, taiList) {
+				ran.Log.Info("---taiList: ", taiList)
+				ran.Log.Info("---tai.Tai: ", tai.Tai)
+				ran.Log.Info("---tai.SNssaiList: ", tai.SNssaiList)
+				ran.Log.Tracef("SERVED_TAI_INDEX[%d]", i)
+				ran.Log.Infof("---SERVED_TAI_INDEX[%d]", i)
+				found = true
+				break
+			}
+		}
+		if !found {
+			ran.Log.Warn("NG-Setup failure: Cannot find Served TAI in AMF")
+			cause.Present = ngapType.CausePresentMisc
+			cause.Misc = &ngapType.CauseMisc{
+				Value: ngapType.CauseMiscPresentUnknownPLMN,
+			}
+		}
+	}
+
+	if cause.Present == ngapType.CausePresentNothing && reflect.DeepEqual(gnbslicelist, amfslicelist) {
+		// if cause.Present == ngapType.CausePresentNothing && reflect.DeepEqual(gnbslicelist,amfslicelist) {
+
+		ngap_message.SendNGSetupResponse(ran)
+		// send nf(gnb) status notification
+		gnbStatus := mi.MetricEvent{
+			EventType: mi.CNfStatusEvt,
+			NfStatusData: mi.CNfStatus{
+				NfType:   mi.NfTypeGnb,
+				NfStatus: mi.NfStatusConnected, NfName: ran.GnbId,
+			},
+		}
+		if err := metrics.StatWriter.PublishNfStatusEvent(gnbStatus); err != nil {
+			ran.Log.Errorf("Could not publish NfStatusEvent: %v", err)
+		}
+	} else {
+		ngap_message.SendNGSetupFailure(ran, cause)
+	}
+
 }
 
 func HandleUplinkNasTransport(ran *context.AmfRan, message *ngapType.NGAPPDU) {
