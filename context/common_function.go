@@ -44,6 +44,13 @@ func InTaiList(servedTai models.Tai, taiList []models.Tai) bool {
 	return false
 }
 
+func Inslicelist(gnbslicelist []interface{}, amfslicelist []interface{}) bool {
+	if reflect.DeepEqual(gnbslicelist, amfslicelist) {
+		return true
+	}
+	return false
+}
+
 func TacInAreas(targetTac string, areas []models.Area) bool {
 	for _, area := range areas {
 		for _, tac := range area.Tacs {

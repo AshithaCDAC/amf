@@ -11,7 +11,6 @@ import (
 	"encoding/hex"
 	"fmt"
 	"os"
-	"reflect"
 	"strconv"
 
 	"github.com/omec-project/amf/consumer"
@@ -771,7 +770,11 @@ func HandleNGSetupRequest(ran *context.AmfRan, message *ngapType.NGAPPDU) {
 				break
 			}
 		}
-		if !found {
+		var flags bool
+		if context.Inslicelist(gnbslicelist, amfslicelist) {
+			flags = true
+		}
+		if !found && !flags {
 			ran.Log.Warn("NG-Setup failure: Cannot find Served TAI in AMF")
 			cause.Present = ngapType.CausePresentMisc
 			cause.Misc = &ngapType.CauseMisc{
@@ -782,23 +785,23 @@ func HandleNGSetupRequest(ran *context.AmfRan, message *ngapType.NGAPPDU) {
 
 	if cause.Present == ngapType.CausePresentNothing {
 		// if cause.Present == ngapType.CausePresentNothing && reflect.DeepEqual(gnbslicelist,amfslicelist) {
-		if reflect.DeepEqual(gnbslicelist, amfslicelist) {
-			ngap_message.SendNGSetupResponse(ran)
-			// send nf(gnb) status notification
-			gnbStatus := mi.MetricEvent{
-				EventType: mi.CNfStatusEvt,
-				NfStatusData: mi.CNfStatus{
-					NfType:   mi.NfTypeGnb,
-					NfStatus: mi.NfStatusConnected, NfName: ran.GnbId,
-				},
-			}
-
-			if err := metrics.StatWriter.PublishNfStatusEvent(gnbStatus); err != nil {
-				ran.Log.Errorf("Could not publish NfStatusEvent: %v", err)
-			}
-		} else {
-			ngap_message.SendNGSetupFailure(ran, cause)
+		// if reflect.DeepEqual(gnbslicelist, amfslicelist) {
+		ngap_message.SendNGSetupResponse(ran)
+		// send nf(gnb) status notification
+		gnbStatus := mi.MetricEvent{
+			EventType: mi.CNfStatusEvt,
+			NfStatusData: mi.CNfStatus{
+				NfType:   mi.NfTypeGnb,
+				NfStatus: mi.NfStatusConnected, NfName: ran.GnbId,
+			},
 		}
+
+		if err := metrics.StatWriter.PublishNfStatusEvent(gnbStatus); err != nil {
+			ran.Log.Errorf("Could not publish NfStatusEvent: %v", err)
+		}
+		// } else {
+		// 	ngap_message.SendNGSetupFailure(ran, cause)
+		// }
 	} else {
 		ngap_message.SendNGSetupFailure(ran, cause)
 	}
