@@ -706,7 +706,7 @@ func HandleNGSetupRequest(ran *context.AmfRan, message *ngapType.NGAPPDU) {
 					sstvalue := snssai_sst_value.Value
 					ran.Log.Info("---SST from AMF: ", sstvalue)
 
-					strsstvalue := fmt.Sprintf("%o%o%o", sstvalue[0])
+					strsstvalue := fmt.Sprintf("%o", sstvalue[0])
 					ran.Log.Info("stringsst:", strsstvalue)
 
 					intsstvalue, err := strconv.ParseInt(strsstvalue, 10, 32)
@@ -725,8 +725,10 @@ func HandleNGSetupRequest(ran *context.AmfRan, message *ngapType.NGAPPDU) {
 
 					// gnbslicelist := []interface{}{sst,sd}
 					// amfslicelist := []interface{}{intsst,strsdvalue}
-					// if len(gnbslicelist == amfslicelist){
-
+					// if reflect.DeepEqual(gnbslicelist,amfslicelist){
+					// 	ran.Log.Info("Slice values are equal")
+					// } else {
+					// 	ran.Log.Info("Slice values Not equal")
 					// }
 					// compare the slice values
 					// if sd == intsd {
