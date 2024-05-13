@@ -721,32 +721,21 @@ func HandleNGSetupRequest(ran *context.AmfRan, message *ngapType.NGAPPDU) {
 					}
 					if sd == strsdvalue {
 						ran.Log.Info("sd values are equal")
+					} else {
+						ran.Log.Info("sd values not equal")
 					}
 
 					// gnbslicelist := []interface{}{sst,sd}
 					// amfslicelist := []interface{}{intsst,strsdvalue}
 					// if reflect.DeepEqual(gnbslicelist,amfslicelist){
-					// 	ran.Log.Info("Slice values are equal")
+					// 	ran.Log.Info("Slice lists are equal")
 					// } else {
-					// 	ran.Log.Info("Slice values Not equal")
-					// }
-					// compare the slice values
-					// if sd == intsd {
-					// 	ran.Log.Info("---Sst values in Slice are equal")
-					// } else {
-					// 	ran.Log.Info("---NG-Setup failure: No supported slice exist")
+					// 	ran.Log.Info("Slice lists Not equal")
 					// }
 				}
 			}
 		}
 	}
-
-	// if reflect.DeepEqual(, pLMNSupportList.List) {
-	// 	ran.Log.Info("---inside the deepequal comparison")
-	// 	ran.Log.Info("---Slice values are equal")
-	// } else {
-	// 	ran.Log.Info("---NG-Setup failure: No supported slice exist")
-	// }
 
 	if len(ran.SupportedTAList) == 0 {
 		ran.Log.Warn("NG-Setup failure: No supported TA exist in NG-Setup request")
@@ -757,20 +746,11 @@ func HandleNGSetupRequest(ran *context.AmfRan, message *ngapType.NGAPPDU) {
 	} else {
 		var found bool
 		taiList := make([]models.Tai, len(context.AMF_Self().SupportTaiLists))
-		// ssaiList := make([]models.SupportedNssaiAvailabilityData, len(context.AMF_Self().SupportnssaiLists))
 		copy(taiList, context.AMF_Self().SupportTaiLists)
-		// copy(ssaiList, context.AMF_Self().SupportnssaiLists)
-		// ran.Log.Info("---ssaiList: ", ssaiList)
 		for i := range taiList {
 			taiList[i].Tac = util.TACConfigToModels(taiList[i].Tac)
 			ran.Log.Infof("Supported Tai List in AMF Plmn: %v, Tac: 0x%v Tac: %v", taiList[i].PlmnId, taiList[i].Tac, context.AMF_Self().SupportTaiLists[i].Tac)
-			// ran.Log.Infof("Supported slice List in AMF sst: %v, sd: %v", taiList[i].Sst, taiList[i].Sd)
 		}
-		// for i := range ssaiList {
-		// 	ran.Log.Info("---inside the ssailist loop")
-		// 	// ssaiList[i].SupportedSnssaiList= util.TACConfigToModels(taiList[i].Tac)
-		// 	ran.Log.Infof("Supported Tai List in AMF Core Plmn: %v, Tac: 0x%v Slicelist: %v", ssaiList[i].Tai.PlmnId, ssaiList[i].Tai.Tac, ssaiList[i].SupportedSnssaiList)
-		// }
 
 		for i, tai := range ran.SupportedTAList {
 			ran.Log.Info("---inside the for loop")
@@ -794,6 +774,8 @@ func HandleNGSetupRequest(ran *context.AmfRan, message *ngapType.NGAPPDU) {
 	}
 
 	if cause.Present == ngapType.CausePresentNothing {
+		// if cause.Present == ngapType.CausePresentNothing && reflect.DeepEqual(gnbslicelist,amfslicelist) {
+
 		ngap_message.SendNGSetupResponse(ran)
 		// send nf(gnb) status notification
 		gnbStatus := mi.MetricEvent{
