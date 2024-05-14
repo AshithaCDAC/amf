@@ -635,11 +635,15 @@ func HandleNGSetupRequest(ran *context.AmfRan, message *ngapType.NGAPPDU) {
 		// sstList = append(sstList, sst)
 		// sdList = append(sdList, sd)
 		// ran.Log.Info("---value of s_nssai: ", s_nssai)
-		ran.Log.Info("---Sst Value in SNssaiList: ", sst)
-		ran.Log.Info("---Sd Value in SNssaiList: ", sd)
+		ran.Log.Info("---Sst Value in SNssaiList gnb: ", sst)
+		ran.Log.Info("---Sd Value in SNssaiList gnb: ", sd)
 
-		intsdvaluegnb, err := strconv.Atoi(sd)
-		ran.Log.Info("integer value of SD gnb:", intsdvaluegnb, err)
+		intsdvaluegnb, err := strconv.ParseInt(sd, 10, 32)
+		if err != nil {
+			ran.Log.Info("error in Parsing")
+		}
+		intsd := int32(intsdvaluegnb)
+		ran.Log.Info("Int32 value of sd: ", intsd)
 		// ran.Log.Info("---sstlist: ", sstList)
 		// ran.Log.Info("---sdlist: ", sdList)
 
@@ -668,55 +672,51 @@ func HandleNGSetupRequest(ran *context.AmfRan, message *ngapType.NGAPPDU) {
 			ran.Log.Info("---plmnsupport list from AMF: ", pLMNSupportList.List)
 
 			for _, s_nssai_amf := range pLMNSupportList.List {
-				plmn_identity := s_nssai_amf.PLMNIdentity
 				slice_support_list := s_nssai_amf.SliceSupportList
-				ie_extension := s_nssai_amf.IEExtensions
-				ran.Log.Info("---plmn_identity ", plmn_identity)
 				ran.Log.Info("---slice_support_list", slice_support_list)
-				ran.Log.Info("---ie_extension", ie_extension)
 
 				for _, slice_supportlist_list := range s_nssai_amf.SliceSupportList.List {
 					slice_support_item_snssai := slice_supportlist_list.SNSSAI
-					slice_support_item_ieexten := slice_supportlist_list.IEExtensions
 					ran.Log.Info("---SNSSAI: ", slice_support_item_snssai)
-					ran.Log.Info("---IEExtensions: ", slice_support_item_ieexten)
 
 					slicesupplist_list_nssai := slice_supportlist_list.SNSSAI
 					snssai_sst_value := slicesupplist_list_nssai.SST
 					snssai_sd_value := slicesupplist_list_nssai.SD
-					snnsai_ieexten := slicesupplist_list_nssai.IEExtensions
 					ran.Log.Info("---SST: ", snssai_sst_value)
 					ran.Log.Info("---SD: ", snssai_sd_value)
-					ran.Log.Info("---IEEXTENSION: ", snnsai_ieexten)
 
 					// SD VALUE
 					sdvalue := snssai_sd_value.Value
 					ran.Log.Info("---SD from AMF: ", sdvalue)
 
 					strsdvalue := fmt.Sprintf("%o%o%o", sdvalue[0], sdvalue[1], sdvalue[2])
-					ran.Log.Info("stringsd:", strsdvalue)
+					ran.Log.Info("---string value of SD from AMF:", strsdvalue)
 
-					intsdvalueamf, err := strconv.Atoi(strsdvalue)
-					ran.Log.Info("integer value of SD amf:", intsdvalueamf, err)
+					intsdvalueamf, err := strconv.ParseInt(strsdvalue, 10, 32)
+					if err != nil {
+						ran.Log.Info("error in parsing")
+					}
+					intsdamf := int32(intsdvalueamf)
+					ran.Log.Info("---Int32 value of SD from AMF: ", intsdamf)
 
 					// SST VALUE
 					sstvalue := snssai_sst_value.Value
 					ran.Log.Info("---SST from AMF: ", sstvalue)
 
 					strsstvalue := fmt.Sprintf("%o", sstvalue[0])
-					ran.Log.Info("stringsst:", strsstvalue)
+					ran.Log.Info("---string value of SST from AMF:", strsstvalue)
 
 					intsstvalue, err := strconv.ParseInt(strsstvalue, 10, 32)
 					if err != nil {
 						ran.Log.Info("error in Parsing")
 					}
 					intsst := int32(intsstvalue)
-					ran.Log.Info("Int32 value of sst: ", intsst)
+					ran.Log.Info("---Int32 value of sst SST from AMF: ", intsst)
 
 					if sst == intsst {
 						ran.Log.Info("sst values are equal")
 					}
-					if intsdvaluegnb == intsdvalueamf {
+					if intsd == intsdamf {
 						ran.Log.Info("sd values are equal")
 					} else {
 						ran.Log.Info("sd values not equal")
@@ -763,8 +763,16 @@ func HandleNGSetupRequest(ran *context.AmfRan, message *ngapType.NGAPPDU) {
 			flags = true
 		}
 
-		if !found || !flags {
+		if !found {
 			ran.Log.Warn("NG-Setup failure: Cannot find Served TAI in AMF")
+			cause.Present = ngapType.CausePresentMisc
+			cause.Misc = &ngapType.CauseMisc{
+				Value: ngapType.CauseMiscPresentUnknownPLMN,
+			}
+		}
+
+		if !flags {
+			ran.Log.Warn("NG-Setup failure: Wrong Slice values")
 			cause.Present = ngapType.CausePresentMisc
 			cause.Misc = &ngapType.CauseMisc{
 				Value: ngapType.CauseMiscPresentUnknownPLMN,
