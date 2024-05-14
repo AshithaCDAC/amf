@@ -4026,6 +4026,9 @@ func HandleRanConfigurationUpdate(ran *context.AmfRan, message *ngapType.NGAPPDU
 	var cause ngapType.Cause
 	amfSelf := context.AMF_Self()
 
+	var gnbplmnlist []interface{}
+	var coreplmnlist []interface{}
+
 	if ran == nil {
 		logger.NgapLog.Error("ran is nil")
 		return
@@ -4123,6 +4126,8 @@ func HandleRanConfigurationUpdate(ran *context.AmfRan, message *ngapType.NGAPPDU
 				} else {
 					ran.Log.Info("Not equal")
 				}
+				gnbplmnlist = append(gnbplmnlist, mccgnb, mncgnb)
+				coreplmnlist = append(coreplmnlist, mcccore, mnccore)
 			}
 		}
 	}
@@ -4148,8 +4153,22 @@ func HandleRanConfigurationUpdate(ran *context.AmfRan, message *ngapType.NGAPPDU
 				break
 			}
 		}
+
+		var flags bool
+		if context.Inplmnlist(gnbplmnlist, coreplmnlist) {
+			ran.Log.Info("mcc and mnc values are equal")
+			flags = true
+		}
+
 		if !found {
 			ran.Log.Warn("RanConfigurationUpdate failure: Cannot find Served TAI in AMF")
+			cause.Present = ngapType.CausePresentMisc
+			cause.Misc = &ngapType.CauseMisc{
+				Value: ngapType.CauseMiscPresentUnknownPLMN,
+			}
+		}
+		if !flags {
+			ran.Log.Warn("RanConfigurationUpdate failure: Wrong mcc mnc values")
 			cause.Present = ngapType.CausePresentMisc
 			cause.Misc = &ngapType.CauseMisc{
 				Value: ngapType.CauseMiscPresentUnknownPLMN,

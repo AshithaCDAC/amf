@@ -48,6 +48,10 @@ func Inslicelist(gnbslicelist []interface{}, amfslicelist []interface{}) bool {
 	return reflect.DeepEqual(gnbslicelist, amfslicelist)
 }
 
+func Inplmnlist(gnbplmnlist []interface{}, amfplmnlist []interface{}) bool {
+	return reflect.DeepEqual(gnbplmnlist, amfplmnlist)
+}
+
 func TacInAreas(targetTac string, areas []models.Area) bool {
 	for _, area := range areas {
 		for _, tac := range area.Tacs {
