@@ -4095,6 +4095,10 @@ func HandleRanConfigurationUpdate(ran *context.AmfRan, message *ngapType.NGAPPDU
 			}
 			ran.Log.Tracef("PLMN_ID[MCC:%s MNC:%s] TAC[%s]", plmnId.Mcc, plmnId.Mnc, tac)
 			ran.Log.Infof("PLMN_ID[MCC:%s MNC:%s] TAC[%s]", plmnId.Mcc, plmnId.Mnc, tac)
+			mccgnb := plmnId.Mcc
+			mncgnb := plmnId.Mnc
+			ran.Log.Info("value of mcc gnb: ", mccgnb)
+			ran.Log.Info("value of mnc gnb", mncgnb)
 			if len(ran.SupportedTAList) < capOfSupportTai {
 				ran.SupportedTAList = append(ran.SupportedTAList, supportedTAI)
 			} else {
@@ -4105,15 +4109,19 @@ func HandleRanConfigurationUpdate(ran *context.AmfRan, message *ngapType.NGAPPDU
 				amfid := guami.AmfId
 				ran.Log.Info("Value of plmnid: ", plmnid)
 				ran.Log.Info("Value of amfid: ", amfid)
-				mcc := plmnid.Mcc
-				mnc := plmnid.Mnc
-				ran.Log.Info("Value of mcc: ", mcc)
-				ran.Log.Info("Value of mnc: ", mnc)
-				if mcc == plmnId.Mcc {
+				mcccore := plmnid.Mcc
+				mnccore := plmnid.Mnc
+				ran.Log.Info("Value of mcc core: ", mcccore)
+				ran.Log.Info("Value of mnc core: ", mnccore)
+				if mcccore == mccgnb {
 					ran.Log.Info("MCC values are equal")
+				} else {
+					ran.Log.Info("Not equal")
 				}
-				if mnc == plmnId.Mnc {
+				if mnccore == mncgnb {
 					ran.Log.Info("MNC values are equal")
+				} else {
+					ran.Log.Info("Not equal")
 				}
 			}
 		}
@@ -4929,19 +4937,3 @@ func buildCriticalityDiagnosticsIEItem(ieCriticality aper.Enumerated, ieID int64
 
 	return item
 }
-
-// func GetHexString(bytes []byte, sep string) string {
-// 	if len(bytes) > 0 {
-
-// 		hexvals := make([]string, 0, len(bytes))
-// 		for idx := range bytes {
-// 			chr := fmt.Sprintf("%.2x", bytes[idx])
-// 			if chr != "" {
-// 				hexvals = append(hexvals, chr)
-// 			}
-// 		}
-// 		return strings.Join(hexvals, sep)
-// 	}
-
-// 	return ""
-// }
