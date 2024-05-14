@@ -629,15 +629,6 @@ func HandleNGSetupRequest(ran *context.AmfRan, message *ngapType.NGAPPDU) {
 		}
 	}
 
-	// 	for _, requestedSnssai := range requestedNssai {
-	// 		ran.Log.Infof("---requested nssai: %+v", *requestedSnssai.ServingSnssai)
-	// 		if ue.InSubscribedNssai(*requestedSnssai.ServingSnssai) {
-	// 			ran.Log.Info("---Slice values are equal")
-	// 		} else {
-	// 			ran.Log.Info("---NG-Setup failure: No supported slice exist")
-	// 		}
-	// 	}
-	// }
 	for _, s_nssai := range supportedTAI.SNssaiList {
 		sst := s_nssai.Sst
 		sd := s_nssai.Sd
@@ -733,11 +724,6 @@ func HandleNGSetupRequest(ran *context.AmfRan, message *ngapType.NGAPPDU) {
 
 					gnbslicelist = append(gnbslicelist, sst, intsdvaluegnb)
 					amfslicelist = append(amfslicelist, intsst, intsdvalueamf)
-					// if reflect.DeepEqual(gnbslicelist, amfslicelist) {
-					// 	ran.Log.Info("Slice lists are equal")
-					// } else {
-					// 	ran.Log.Info("Slice lists Not equal")
-					// }
 				}
 			}
 		}
@@ -773,6 +759,7 @@ func HandleNGSetupRequest(ran *context.AmfRan, message *ngapType.NGAPPDU) {
 
 		var flags bool
 		if context.Inslicelist(gnbslicelist, amfslicelist) {
+			ran.Log.Info("Slice values are equal")
 			flags = true
 		}
 
