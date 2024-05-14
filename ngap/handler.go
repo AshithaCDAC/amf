@@ -688,8 +688,8 @@ func HandleNGSetupRequest(ran *context.AmfRan, message *ngapType.NGAPPDU) {
 					// SD VALUE
 					sdvalue := snssai_sd_value.Value
 					ran.Log.Info("---SD from AMF: ", sdvalue)
-
-					strsdvalue := fmt.Sprintf("%o%o%o", sdvalue[0], sdvalue[1], sdvalue[2])
+					a := string(sdvalue)
+					strsdvalue := fmt.Sprintf("%o%o%o", a[0], a[1], a[2])
 					ran.Log.Info("---string value of SD from AMF:", strsdvalue)
 
 					intsdvalueamf, err := strconv.ParseInt(strsdvalue, 10, 32)
