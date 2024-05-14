@@ -4024,6 +4024,7 @@ func HandleRanConfigurationUpdate(ran *context.AmfRan, message *ngapType.NGAPPDU
 	var pagingDRX *ngapType.PagingDRX
 
 	var cause ngapType.Cause
+	amfSelf := context.AMF_Self()
 
 	if ran == nil {
 		logger.NgapLog.Error("ran is nil")
@@ -4093,10 +4094,27 @@ func HandleRanConfigurationUpdate(ran *context.AmfRan, message *ngapType.NGAPPDU
 				}
 			}
 			ran.Log.Tracef("PLMN_ID[MCC:%s MNC:%s] TAC[%s]", plmnId.Mcc, plmnId.Mnc, tac)
+			ran.Log.Infof("PLMN_ID[MCC:%s MNC:%s] TAC[%s]", plmnId.Mcc, plmnId.Mnc, tac)
 			if len(ran.SupportedTAList) < capOfSupportTai {
 				ran.SupportedTAList = append(ran.SupportedTAList, supportedTAI)
 			} else {
 				break
+			}
+			for _, guami := range amfSelf.ServedGuamiList {
+				plmnid := guami.PlmnId
+				amfid := guami.AmfId
+				ran.Log.Info("Value of plmnid: ", plmnid)
+				ran.Log.Info("Value of amfid: ", amfid)
+				mcc := plmnid.Mcc
+				mnc := plmnid.Mnc
+				ran.Log.Info("Value of mcc: ", mcc)
+				ran.Log.Info("Value of mnc: ", mnc)
+				if mcc == plmnId.Mcc {
+					ran.Log.Info("MCC values are equal")
+				}
+				if mnc == plmnId.Mnc {
+					ran.Log.Info("MNC values are equal")
+				}
 			}
 		}
 	}
