@@ -508,8 +508,8 @@ func HandleNGSetupRequest(ran *context.AmfRan, message *ngapType.NGAPPDU) {
 	// var ue *context.AmfUe
 	var cause ngapType.Cause
 
-	// var gnbslicelist []interface{}
-	// var amfslicelist []interface{}
+	var gnbslicelist []interface{}
+	var amfslicelist []interface{}
 
 	supportedTAI := context.NewSupportedTAI()
 
@@ -639,14 +639,14 @@ func HandleNGSetupRequest(ran *context.AmfRan, message *ngapType.NGAPPDU) {
 
 		// first
 		firsttwohex := sd[:2]
-		fmt.Println("first two hex : ", firsttwohex)
+		ran.Log.Info("first two hex : ", firsttwohex)
 
 		intoffirsttwohex, err := strconv.ParseInt(firsttwohex, 16, 64)
 		if err != nil {
 			fmt.Println("error in parsing")
 		}
 		octalstring1 := strconv.FormatInt(intoffirsttwohex, 8)
-		fmt.Println("first octal :", octalstring1)
+		ran.Log.Info("first octal :", octalstring1)
 
 		integerValue1, err := strconv.ParseInt(octalstring1, 8, 64)
 		if err != nil {
@@ -654,43 +654,43 @@ func HandleNGSetupRequest(ran *context.AmfRan, message *ngapType.NGAPPDU) {
 			return
 		}
 		byteofoctal1 := byte(integerValue1)
-		fmt.Println("first octal byte: ", byteofoctal1)
+		ran.Log.Info("first octal byte: ", byteofoctal1)
 
 		// second
 		secondtwohex := sd[2:4]
-		fmt.Println("second two hex : ", secondtwohex)
+		ran.Log.Info("second two hex : ", secondtwohex)
 
 		intofsecondtwohex, err := strconv.ParseInt(secondtwohex, 16, 64)
 		if err != nil {
 			fmt.Println("error in parsing")
 		}
 		octalstring2 := strconv.FormatInt(intofsecondtwohex, 8)
-		fmt.Println("second octal :", octalstring2)
+		ran.Log.Info("second octal :", octalstring2)
 		integerValue2, err := strconv.ParseInt(octalstring2, 8, 64)
 		if err != nil {
 			fmt.Println("Error:", err)
 			return
 		}
 		byteofoctal2 := byte(integerValue2)
-		fmt.Println("first octal byte: ", byteofoctal2)
+		ran.Log.Info("second octal byte: ", byteofoctal2)
 
 		// third
 		thirdtwohex := sd[4:6]
-		fmt.Println("second two hex : ", thirdtwohex)
+		ran.Log.Info("third two hex : ", thirdtwohex)
 
 		intofthirdtwohex, err := strconv.ParseInt(thirdtwohex, 16, 64)
 		if err != nil {
 			fmt.Println("error in parsing")
 		}
 		octalstring3 := strconv.FormatInt(intofthirdtwohex, 8)
-		fmt.Println("third octal :", octalstring3)
+		ran.Log.Info("third octal :", octalstring3)
 		integerValue3, err := strconv.ParseInt(octalstring3, 8, 64)
 		if err != nil {
 			fmt.Println("Error:", err)
 			return
 		}
 		byteofoctal3 := byte(integerValue3)
-		fmt.Println("first octal byte: ", byteofoctal3)
+		ran.Log.Info("third octal byte: ", byteofoctal3)
 
 		var list1 []byte
 		list1 = append(list1, byteofoctal1)
@@ -779,8 +779,8 @@ func HandleNGSetupRequest(ran *context.AmfRan, message *ngapType.NGAPPDU) {
 						ran.Log.Info("sd values not equal")
 					}
 
-					// gnbslicelist = append(gnbslicelist, sst, result)
-					// amfslicelist = append(amfslicelist, intsst, strsdvalue)
+					gnbslicelist = append(gnbslicelist, sst, list1)
+					amfslicelist = append(amfslicelist, intsst, list2)
 				}
 			}
 		}
@@ -814,11 +814,11 @@ func HandleNGSetupRequest(ran *context.AmfRan, message *ngapType.NGAPPDU) {
 			}
 		}
 
-		// var flags bool
-		// if context.Inslicelist(gnbslicelist, amfslicelist) {
-		// 	ran.Log.Info("Slice values are equal")
-		// 	flags = true
-		// }
+		var flags bool
+		if context.Inslicelist(gnbslicelist, amfslicelist) {
+			ran.Log.Info("Slice values are equal")
+			flags = true
+		}
 
 		if !found {
 			ran.Log.Warn("NG-Setup failure: Cannot find Served TAI in AMF")
@@ -828,13 +828,13 @@ func HandleNGSetupRequest(ran *context.AmfRan, message *ngapType.NGAPPDU) {
 			}
 		}
 
-		// if !flags {
-		// 	ran.Log.Warn("NG-Setup failure: Wrong Slice values")
-		// 	cause.Present = ngapType.CausePresentMisc
-		// 	cause.Misc = &ngapType.CauseMisc{
-		// 		Value: ngapType.CauseMiscPresentUnknownPLMN,
-		// 	}
-		// }
+		if !flags {
+			ran.Log.Warn("NG-Setup failure: Wrong Slice values")
+			cause.Present = ngapType.CausePresentMisc
+			cause.Misc = &ngapType.CauseMisc{
+				Value: ngapType.CauseMiscPresentUnknownPLMN,
+			}
+		}
 	}
 
 	if cause.Present == ngapType.CausePresentNothing {

@@ -44,9 +44,9 @@ func InTaiList(servedTai models.Tai, taiList []models.Tai) bool {
 	return false
 }
 
-// func Inslicelist(gnbslicelist []interface{}, amfslicelist []interface{}) bool {
-// 	return reflect.DeepEqual(gnbslicelist, amfslicelist)
-// }
+func Inslicelist(gnbslicelist []interface{}, amfslicelist []interface{}) bool {
+	return reflect.DeepEqual(gnbslicelist, amfslicelist)
+}
 
 func Inplmnlist(gnbplmnlist []interface{}, amfplmnlist []interface{}) bool {
 	return reflect.DeepEqual(gnbplmnlist, amfplmnlist)
