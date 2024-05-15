@@ -97,8 +97,8 @@ jobs:
         run: echo "${{ secrets.PASSWORD }}" | docker login -u "${{ secrets.USERNAME }}" --password-stdin
 
       - name: Tag Docker image
-        run: docker tag 5gc-amf:0.0.1-dev ashithacdac/amf_repo
+        run: docker tag 5gc-amf:0.0.1-dev ashithacdac/amf_docker_repo
 
       - name: Push Docker image to Docker Hub
-        run: docker push ashithacdac/amf_repo
+        run: docker push ashithacdac/amf_docker_repo
         
