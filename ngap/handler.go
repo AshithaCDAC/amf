@@ -11,6 +11,7 @@ import (
 	"encoding/hex"
 	"fmt"
 	"os"
+	"reflect"
 	"strconv"
 
 	"github.com/omec-project/amf/consumer"
@@ -507,8 +508,8 @@ func HandleNGSetupRequest(ran *context.AmfRan, message *ngapType.NGAPPDU) {
 	// var ue *context.AmfUe
 	var cause ngapType.Cause
 
-	var gnbslicelist []interface{}
-	var amfslicelist []interface{}
+	// var gnbslicelist []interface{}
+	// var amfslicelist []interface{}
 
 	supportedTAI := context.NewSupportedTAI()
 
@@ -635,6 +636,7 @@ func HandleNGSetupRequest(ran *context.AmfRan, message *ngapType.NGAPPDU) {
 
 		ran.Log.Info("---Sst Value in SNssaiList gnb: ", sst)
 		ran.Log.Info("---Sd Value in SNssaiList gnb: ", sd)
+
 		// first
 		firsttwohex := sd[:2]
 		fmt.Println("first two hex : ", firsttwohex)
@@ -645,6 +647,15 @@ func HandleNGSetupRequest(ran *context.AmfRan, message *ngapType.NGAPPDU) {
 		}
 		octalstring1 := strconv.FormatInt(intoffirsttwohex, 8)
 		fmt.Println("first octal :", octalstring1)
+
+		integerValue1, err := strconv.ParseInt(octalstring1, 8, 64)
+		if err != nil {
+			fmt.Println("Error:", err)
+			return
+		}
+		byteofoctal1 := byte(integerValue1)
+		fmt.Println("first octal byte: ", byteofoctal1)
+
 		// second
 		secondtwohex := sd[2:4]
 		fmt.Println("second two hex : ", secondtwohex)
@@ -655,6 +666,14 @@ func HandleNGSetupRequest(ran *context.AmfRan, message *ngapType.NGAPPDU) {
 		}
 		octalstring2 := strconv.FormatInt(intofsecondtwohex, 8)
 		fmt.Println("second octal :", octalstring2)
+		integerValue2, err := strconv.ParseInt(octalstring2, 8, 64)
+		if err != nil {
+			fmt.Println("Error:", err)
+			return
+		}
+		byteofoctal2 := byte(integerValue2)
+		fmt.Println("first octal byte: ", byteofoctal2)
+
 		// third
 		thirdtwohex := sd[4:6]
 		fmt.Println("second two hex : ", thirdtwohex)
@@ -665,15 +684,19 @@ func HandleNGSetupRequest(ran *context.AmfRan, message *ngapType.NGAPPDU) {
 		}
 		octalstring3 := strconv.FormatInt(intofthirdtwohex, 8)
 		fmt.Println("third octal :", octalstring3)
-		// converting to string
-		s1 := string(octalstring1)
-		s2 := string(octalstring2)
-		s3 := string(octalstring3)
-		fmt.Println(s1)
-		fmt.Println(s2)
-		fmt.Println(s3)
-		result := s1 + s2 + s3
-		fmt.Println("string sd result: ", result)
+		integerValue3, err := strconv.ParseInt(octalstring3, 8, 64)
+		if err != nil {
+			fmt.Println("Error:", err)
+			return
+		}
+		byteofoctal3 := byte(integerValue3)
+		fmt.Println("first octal byte: ", byteofoctal3)
+
+		var list1 []byte
+		list1 = append(list1, byteofoctal1)
+		list1 = append(list1, byteofoctal2)
+		list1 = append(list1, byteofoctal3)
+		fmt.Println("list1 is: ", list1)
 
 		ran.Log.Info("---supported SNssailist from gnb: ", supportedTAI.SNssaiList)
 
@@ -717,8 +740,14 @@ func HandleNGSetupRequest(ran *context.AmfRan, message *ngapType.NGAPPDU) {
 					sdvalue := snssai_sd_value.Value
 					ran.Log.Info("---SD from AMF: ", sdvalue)
 
-					strsdvalue := fmt.Sprintf("%o%o%o", sdvalue[0], sdvalue[1], sdvalue[2])
-					ran.Log.Info("---string value of SD from AMF:", strsdvalue)
+					var list2 []byte
+					list2 = append(list2, sdvalue[0])
+					list2 = append(list2, sdvalue[1])
+					list2 = append(list2, sdvalue[2])
+					fmt.Println("list2 is: ", list2)
+
+					// strsdvalue := fmt.Sprintf("%o%o%o", sdvalue[0], sdvalue[1], sdvalue[2])
+					// ran.Log.Info("---string value of SD from AMF:", strsdvalue)
 
 					// intsdvalueamf, err := strconv.ParseInt(strsdvalue, 10, 32)
 					// if err != nil {
@@ -744,14 +773,14 @@ func HandleNGSetupRequest(ran *context.AmfRan, message *ngapType.NGAPPDU) {
 					if sst == intsst {
 						ran.Log.Info("sst values are equal")
 					}
-					if result == strsdvalue {
+					if reflect.DeepEqual(list1, list2) {
 						ran.Log.Info("sd values are equal")
 					} else {
 						ran.Log.Info("sd values not equal")
 					}
 
-					gnbslicelist = append(gnbslicelist, sst, result)
-					amfslicelist = append(amfslicelist, intsst, strsdvalue)
+					// gnbslicelist = append(gnbslicelist, sst, result)
+					// amfslicelist = append(amfslicelist, intsst, strsdvalue)
 				}
 			}
 		}
@@ -785,11 +814,11 @@ func HandleNGSetupRequest(ran *context.AmfRan, message *ngapType.NGAPPDU) {
 			}
 		}
 
-		var flags bool
-		if context.Inslicelist(gnbslicelist, amfslicelist) {
-			ran.Log.Info("Slice values are equal")
-			flags = true
-		}
+		// var flags bool
+		// if context.Inslicelist(gnbslicelist, amfslicelist) {
+		// 	ran.Log.Info("Slice values are equal")
+		// 	flags = true
+		// }
 
 		if !found {
 			ran.Log.Warn("NG-Setup failure: Cannot find Served TAI in AMF")
@@ -799,13 +828,13 @@ func HandleNGSetupRequest(ran *context.AmfRan, message *ngapType.NGAPPDU) {
 			}
 		}
 
-		if !flags {
-			ran.Log.Warn("NG-Setup failure: Wrong Slice values")
-			cause.Present = ngapType.CausePresentMisc
-			cause.Misc = &ngapType.CauseMisc{
-				Value: ngapType.CauseMiscPresentUnknownPLMN,
-			}
-		}
+		// if !flags {
+		// 	ran.Log.Warn("NG-Setup failure: Wrong Slice values")
+		// 	cause.Present = ngapType.CausePresentMisc
+		// 	cause.Misc = &ngapType.CauseMisc{
+		// 		Value: ngapType.CauseMiscPresentUnknownPLMN,
+		// 	}
+		// }
 	}
 
 	if cause.Present == ngapType.CausePresentNothing {
