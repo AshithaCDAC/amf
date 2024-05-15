@@ -635,45 +635,45 @@ func HandleNGSetupRequest(ran *context.AmfRan, message *ngapType.NGAPPDU) {
 
 		ran.Log.Info("---Sst Value in SNssaiList gnb: ", sst)
 		ran.Log.Info("---Sd Value in SNssaiList gnb: ", sd)
+		// // first
+		// firsttwohex := sd[:2]
+		// fmt.Println("first two hex : ", firsttwohex)
 
-		firsttwohex := sd[:2]
-		fmt.Println("first two hex : ", firsttwohex)
+		// intoffirsttwohex, err := strconv.ParseInt(firsttwohex, 16, 64)
+		// if err != nil {
+		// 	fmt.Println("error in parsing")
+		// }
+		// octalstring1 := strconv.FormatInt(intoffirsttwohex, 8)
+		// fmt.Println("first octal :", octalstring1)
+		// // second
+		// secondtwohex := sd[2:4]
+		// fmt.Println("second two hex : ", secondtwohex)
 
-		intoffirsttwohex, err := strconv.ParseInt(firsttwohex, 16, 64)
-		if err != nil {
-			fmt.Println("error in parsing")
-		}
-		octalstring1 := strconv.FormatInt(intoffirsttwohex, 8)
-		fmt.Println("first octal :", octalstring1)
-		// second
-		secondtwohex := sd[2:4]
-		fmt.Println("second two hex : ", secondtwohex)
+		// intofsecondtwohex, err := strconv.ParseInt(secondtwohex, 16, 64)
+		// if err != nil {
+		// 	fmt.Println("error in parsing")
+		// }
+		// octalstring2 := strconv.FormatInt(intofsecondtwohex, 8)
+		// fmt.Println("second octal :", octalstring2)
+		// // third
+		// thirdtwohex := sd[4:6]
+		// fmt.Println("second two hex : ", thirdtwohex)
 
-		intofsecondtwohex, err := strconv.ParseInt(secondtwohex, 16, 64)
-		if err != nil {
-			fmt.Println("error in parsing")
-		}
-		octalstring2 := strconv.FormatInt(intofsecondtwohex, 8)
-		fmt.Println("second octal :", octalstring2)
-		// third
-		thirdtwohex := sd[4:6]
-		fmt.Println("second two hex : ", thirdtwohex)
-
-		intofthirdtwohex, err := strconv.ParseInt(thirdtwohex, 16, 64)
-		if err != nil {
-			fmt.Println("error in parsing")
-		}
-		octalstring3 := strconv.FormatInt(intofthirdtwohex, 8)
-		fmt.Println("third octal :", octalstring3)
+		// intofthirdtwohex, err := strconv.ParseInt(thirdtwohex, 16, 64)
+		// if err != nil {
+		// 	fmt.Println("error in parsing")
+		// }
+		// octalstring3 := strconv.FormatInt(intofthirdtwohex, 8)
+		// fmt.Println("third octal :", octalstring3)
 		// converting to string
-		s1 := string(octalstring1)
-		s2 := string(octalstring2)
-		s3 := string(octalstring3)
-		fmt.Println(s1)
-		fmt.Println(s2)
-		fmt.Println(s3)
-		result := s1 + s2 + s3
-		fmt.Println("string sd result: ", result)
+		// s1 := string(octalstring1)
+		// s2 := string(octalstring2)
+		// s3 := string(octalstring3)
+		// fmt.Println(s1)
+		// fmt.Println(s2)
+		// fmt.Println(s3)
+		// result := s1 + s2 + s3
+		// fmt.Println("string sd result: ", result)
 
 		ran.Log.Info("---supported SNssailist from gnb: ", supportedTAI.SNssaiList)
 
@@ -744,13 +744,13 @@ func HandleNGSetupRequest(ran *context.AmfRan, message *ngapType.NGAPPDU) {
 					if sst == intsst {
 						ran.Log.Info("sst values are equal")
 					}
-					if result == strsdvalue {
+					if sd == strsdvalue {
 						ran.Log.Info("sd values are equal")
 					} else {
 						ran.Log.Info("sd values not equal")
 					}
 
-					gnbslicelist = append(gnbslicelist, sst, result)
+					gnbslicelist = append(gnbslicelist, sst, sd)
 					amfslicelist = append(amfslicelist, intsst, strsdvalue)
 				}
 			}
