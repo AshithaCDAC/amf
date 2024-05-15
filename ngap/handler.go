@@ -696,7 +696,7 @@ func HandleNGSetupRequest(ran *context.AmfRan, message *ngapType.NGAPPDU) {
 		list1 = append(list1, byteofoctal1)
 		list1 = append(list1, byteofoctal2)
 		list1 = append(list1, byteofoctal3)
-		fmt.Println("list1 is: ", list1)
+		fmt.Println("sd value list from gnb: ", list1)
 
 		ran.Log.Info("---supported SNssailist from gnb: ", supportedTAI.SNssaiList)
 
@@ -744,7 +744,7 @@ func HandleNGSetupRequest(ran *context.AmfRan, message *ngapType.NGAPPDU) {
 					list2 = append(list2, sdvalue[0])
 					list2 = append(list2, sdvalue[1])
 					list2 = append(list2, sdvalue[2])
-					fmt.Println("list2 is: ", list2)
+					fmt.Println("sd value list from core: ", list2)
 
 					// strsdvalue := fmt.Sprintf("%o%o%o", sdvalue[0], sdvalue[1], sdvalue[2])
 					// ran.Log.Info("---string value of SD from AMF:", strsdvalue)
