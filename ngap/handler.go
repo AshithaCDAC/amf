@@ -632,20 +632,48 @@ func HandleNGSetupRequest(ran *context.AmfRan, message *ngapType.NGAPPDU) {
 	for _, s_nssai := range supportedTAI.SNssaiList {
 		sst := s_nssai.Sst
 		sd := s_nssai.Sd
-		// sstList = append(sstList, sst)
-		// sdList = append(sdList, sd)
-		// ran.Log.Info("---value of s_nssai: ", s_nssai)
+
 		ran.Log.Info("---Sst Value in SNssaiList gnb: ", sst)
 		ran.Log.Info("---Sd Value in SNssaiList gnb: ", sd)
 
-		intsdvaluegnb, err := strconv.ParseInt(sd, 10, 32)
+		firsttwohex := sd[:2]
+		fmt.Println("first two hex : ", firsttwohex)
+
+		intoffirsttwohex, err := strconv.ParseInt(firsttwohex, 16, 64)
 		if err != nil {
-			ran.Log.Info("error in Parsing")
+			fmt.Println("error in parsing")
 		}
-		intsd := int32(intsdvaluegnb)
-		ran.Log.Info("Int32 value of sd: ", intsd)
-		// ran.Log.Info("---sstlist: ", sstList)
-		// ran.Log.Info("---sdlist: ", sdList)
+		octalstring1 := strconv.FormatInt(intoffirsttwohex, 8)
+		fmt.Println("first octal :", octalstring1)
+		// second
+		secondtwohex := sd[2:4]
+		fmt.Println("second two hex : ", secondtwohex)
+
+		intofsecondtwohex, err := strconv.ParseInt(secondtwohex, 16, 64)
+		if err != nil {
+			fmt.Println("error in parsing")
+		}
+		octalstring2 := strconv.FormatInt(intofsecondtwohex, 8)
+		fmt.Println("second octal :", octalstring2)
+		// third
+		thirdtwohex := sd[4:6]
+		fmt.Println("second two hex : ", thirdtwohex)
+
+		intofthirdtwohex, err := strconv.ParseInt(thirdtwohex, 16, 64)
+		if err != nil {
+			fmt.Println("error in parsing")
+		}
+		octalstring3 := strconv.FormatInt(intofthirdtwohex, 8)
+		fmt.Println("third octal :", octalstring3)
+		// converting to string
+		s1 := string(octalstring1)
+		s2 := string(octalstring2)
+		s3 := string(octalstring3)
+		fmt.Println(s1)
+		fmt.Println(s2)
+		fmt.Println(s3)
+		result := s1 + s2 + s3
+		fmt.Println("string sd result: ", result)
 
 		ran.Log.Info("---supported SNssailist from gnb: ", supportedTAI.SNssaiList)
 
@@ -688,16 +716,16 @@ func HandleNGSetupRequest(ran *context.AmfRan, message *ngapType.NGAPPDU) {
 					// SD VALUE
 					sdvalue := snssai_sd_value.Value
 					ran.Log.Info("---SD from AMF: ", sdvalue)
-					a := string(sdvalue)
-					strsdvalue := fmt.Sprintf("%o%o%o", a[0], a[1], a[2])
+
+					strsdvalue := fmt.Sprintf("%o%o%o", sdvalue[0], sdvalue[1], sdvalue[2])
 					ran.Log.Info("---string value of SD from AMF:", strsdvalue)
 
-					intsdvalueamf, err := strconv.ParseInt(strsdvalue, 10, 32)
-					if err != nil {
-						ran.Log.Info("error in parsing")
-					}
-					intsdamf := int32(intsdvalueamf)
-					ran.Log.Info("---Int32 value of SD from AMF: ", intsdamf)
+					// intsdvalueamf, err := strconv.ParseInt(strsdvalue, 10, 32)
+					// if err != nil {
+					// 	ran.Log.Info("error in parsing")
+					// }
+					// intsdamf := int32(intsdvalueamf)
+					// ran.Log.Info("---Int32 value of SD from AMF: ", intsdamf)
 
 					// SST VALUE
 					sstvalue := snssai_sst_value.Value
@@ -716,14 +744,14 @@ func HandleNGSetupRequest(ran *context.AmfRan, message *ngapType.NGAPPDU) {
 					if sst == intsst {
 						ran.Log.Info("sst values are equal")
 					}
-					if intsd == intsdamf {
+					if result == strsdvalue {
 						ran.Log.Info("sd values are equal")
 					} else {
 						ran.Log.Info("sd values not equal")
 					}
 
-					gnbslicelist = append(gnbslicelist, sst, intsdvaluegnb)
-					amfslicelist = append(amfslicelist, intsst, intsdvalueamf)
+					gnbslicelist = append(gnbslicelist, sst, result)
+					amfslicelist = append(amfslicelist, intsst, strsdvalue)
 				}
 			}
 		}
