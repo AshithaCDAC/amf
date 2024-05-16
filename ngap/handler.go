@@ -532,6 +532,25 @@ func HandleNGSetupRequest(ran *context.AmfRan, message *ngapType.NGAPPDU) {
 	nGSetupResponseIEs := &nGSetupResponse.ProtocolIEs
 
 	ie := ngapType.NGSetupResponseIEs{}
+	ie = ngapType.NGSetupResponseIEs{}
+	ie.Id.Value = ngapType.ProtocolIEIDPLMNSupportList
+	ie.Criticality.Value = ngapType.CriticalityPresentReject
+	ie.Value.Present = ngapType.NGSetupResponseIEsPresentPLMNSupportList
+	ie.Value.PLMNSupportList = new(ngapType.PLMNSupportList)
+
+	pLMNSupportList := ie.Value.PLMNSupportList
+	// ran.Log.Info("---pLMNSupportList: ", pLMNSupportList)
+	for _, plmnItem := range amfSelf.PlmnSupportList {
+		pLMNSupportItem := ngapType.PLMNSupportItem{}
+		pLMNSupportItem.PLMNIdentity = ngapConvert.PlmnIdToNgap(plmnItem.PlmnId)
+		for _, snssai := range plmnItem.SNssaiList {
+			sliceSupportItem := ngapType.SliceSupportItem{}
+			sliceSupportItem.SNSSAI = ngapConvert.SNssaiToNgap(snssai)
+			pLMNSupportItem.SliceSupportList.List = append(pLMNSupportItem.SliceSupportList.List, sliceSupportItem)
+		}
+		pLMNSupportList.List = append(pLMNSupportList.List, pLMNSupportItem)
+	}
+	nGSetupResponseIEs.List = append(nGSetupResponseIEs.List, ie)
 
 	// var sstList []int32
 	// var sdList []string
@@ -705,26 +724,8 @@ func HandleNGSetupRequest(ran *context.AmfRan, message *ngapType.NGAPPDU) {
 
 			ran.Log.Info("---supported SNssailist from gnb: ", supportedTAI.SNssaiList)
 
-			ie = ngapType.NGSetupResponseIEs{}
-			ie.Id.Value = ngapType.ProtocolIEIDPLMNSupportList
-			ie.Criticality.Value = ngapType.CriticalityPresentReject
-			ie.Value.Present = ngapType.NGSetupResponseIEsPresentPLMNSupportList
-			ie.Value.PLMNSupportList = new(ngapType.PLMNSupportList)
-
 			if ie.Value.PLMNSupportList != nil {
-				pLMNSupportList := ie.Value.PLMNSupportList
-				// ran.Log.Info("---pLMNSupportList: ", pLMNSupportList)
-				for _, plmnItem := range amfSelf.PlmnSupportList {
-					pLMNSupportItem := ngapType.PLMNSupportItem{}
-					pLMNSupportItem.PLMNIdentity = ngapConvert.PlmnIdToNgap(plmnItem.PlmnId)
-					for _, snssai := range plmnItem.SNssaiList {
-						sliceSupportItem := ngapType.SliceSupportItem{}
-						sliceSupportItem.SNSSAI = ngapConvert.SNssaiToNgap(snssai)
-						pLMNSupportItem.SliceSupportList.List = append(pLMNSupportItem.SliceSupportList.List, sliceSupportItem)
-					}
-					pLMNSupportList.List = append(pLMNSupportList.List, pLMNSupportItem)
-				}
-				nGSetupResponseIEs.List = append(nGSetupResponseIEs.List, ie)
+
 				ran.Log.Info("---plmnsupport list from AMF: ", pLMNSupportList.List)
 
 				for _, s_nssai_amf := range pLMNSupportList.List {
