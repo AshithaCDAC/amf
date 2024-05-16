@@ -660,145 +660,145 @@ func HandleNGSetupRequest(ran *context.AmfRan, message *ngapType.NGAPPDU) {
 		ran.Log.Info("---Sst Value in SNssaiList gnb: ", sstgnb)
 		ran.Log.Info("---Sd Value in SNssaiList gnb: ", sd)
 
-		if sd != "" {
+		// if sd != "" {
 
-			// first
-			firsttwohex := sd[:2]
-			ran.Log.Info("first two hex : ", firsttwohex)
+		// first
+		firsttwohex := sd[:2]
+		ran.Log.Info("first two hex : ", firsttwohex)
 
-			intoffirsttwohex, err := strconv.ParseInt(firsttwohex, 16, 64)
-			if err != nil {
-				fmt.Println("error in parsing")
-			}
-			octalstring1 := strconv.FormatInt(intoffirsttwohex, 8)
-			ran.Log.Info("first octal :", octalstring1)
+		intoffirsttwohex, err := strconv.ParseInt(firsttwohex, 16, 64)
+		if err != nil {
+			fmt.Println("error in parsing")
+		}
+		octalstring1 := strconv.FormatInt(intoffirsttwohex, 8)
+		ran.Log.Info("first octal :", octalstring1)
 
-			integerValue1, err := strconv.ParseInt(octalstring1, 8, 64)
-			if err != nil {
-				fmt.Println("Error:", err)
-				return
-			}
-			byteofoctal1 := byte(integerValue1)
-			ran.Log.Info("first octal byte: ", byteofoctal1)
+		integerValue1, err := strconv.ParseInt(octalstring1, 8, 64)
+		if err != nil {
+			fmt.Println("Error:", err)
+			return
+		}
+		byteofoctal1 := byte(integerValue1)
+		ran.Log.Info("first octal byte: ", byteofoctal1)
 
-			// second
-			secondtwohex := sd[2:4]
-			ran.Log.Info("second two hex : ", secondtwohex)
+		// second
+		secondtwohex := sd[2:4]
+		ran.Log.Info("second two hex : ", secondtwohex)
 
-			intofsecondtwohex, err := strconv.ParseInt(secondtwohex, 16, 64)
-			if err != nil {
-				fmt.Println("error in parsing")
-			}
-			octalstring2 := strconv.FormatInt(intofsecondtwohex, 8)
-			ran.Log.Info("second octal :", octalstring2)
-			integerValue2, err := strconv.ParseInt(octalstring2, 8, 64)
-			if err != nil {
-				fmt.Println("Error:", err)
-				return
-			}
-			byteofoctal2 := byte(integerValue2)
-			ran.Log.Info("second octal byte: ", byteofoctal2)
+		intofsecondtwohex, err := strconv.ParseInt(secondtwohex, 16, 64)
+		if err != nil {
+			fmt.Println("error in parsing")
+		}
+		octalstring2 := strconv.FormatInt(intofsecondtwohex, 8)
+		ran.Log.Info("second octal :", octalstring2)
+		integerValue2, err := strconv.ParseInt(octalstring2, 8, 64)
+		if err != nil {
+			fmt.Println("Error:", err)
+			return
+		}
+		byteofoctal2 := byte(integerValue2)
+		ran.Log.Info("second octal byte: ", byteofoctal2)
 
-			// third
-			thirdtwohex := sd[4:6]
-			ran.Log.Info("third two hex : ", thirdtwohex)
+		// third
+		thirdtwohex := sd[4:6]
+		ran.Log.Info("third two hex : ", thirdtwohex)
 
-			intofthirdtwohex, err := strconv.ParseInt(thirdtwohex, 16, 64)
-			if err != nil {
-				fmt.Println("error in parsing")
-			}
-			octalstring3 := strconv.FormatInt(intofthirdtwohex, 8)
-			ran.Log.Info("third octal :", octalstring3)
-			integerValue3, err := strconv.ParseInt(octalstring3, 8, 64)
-			if err != nil {
-				fmt.Println("Error:", err)
-				return
-			}
-			byteofoctal3 := byte(integerValue3)
-			ran.Log.Info("third octal byte: ", byteofoctal3)
+		intofthirdtwohex, err := strconv.ParseInt(thirdtwohex, 16, 64)
+		if err != nil {
+			fmt.Println("error in parsing")
+		}
+		octalstring3 := strconv.FormatInt(intofthirdtwohex, 8)
+		ran.Log.Info("third octal :", octalstring3)
+		integerValue3, err := strconv.ParseInt(octalstring3, 8, 64)
+		if err != nil {
+			fmt.Println("Error:", err)
+			return
+		}
+		byteofoctal3 := byte(integerValue3)
+		ran.Log.Info("third octal byte: ", byteofoctal3)
 
-			sdlistgnb = append(sdlistgnb, byteofoctal1)
-			sdlistgnb = append(sdlistgnb, byteofoctal2)
-			sdlistgnb = append(sdlistgnb, byteofoctal3)
-			fmt.Println("sd value list from gnb: ", sdlistgnb)
+		sdlistgnb = append(sdlistgnb, byteofoctal1)
+		sdlistgnb = append(sdlistgnb, byteofoctal2)
+		sdlistgnb = append(sdlistgnb, byteofoctal3)
+		fmt.Println("sd value list from gnb: ", sdlistgnb)
 
-			ran.Log.Info("---supported SNssailist from gnb: ", supportedTAI.SNssaiList)
+		ran.Log.Info("---supported SNssailist from gnb: ", supportedTAI.SNssaiList)
 
-			if ie.Value.PLMNSupportList != nil {
+		if ie.Value.PLMNSupportList != nil {
 
-				ran.Log.Info("---plmnsupport list from AMF: ", pLMNSupportList.List)
+			ran.Log.Info("---plmnsupport list from AMF: ", pLMNSupportList.List)
 
-				for _, s_nssai_amf := range pLMNSupportList.List {
-					slice_support_list := s_nssai_amf.SliceSupportList
-					ran.Log.Info("---slice_support_list", slice_support_list)
+			for _, s_nssai_amf := range pLMNSupportList.List {
+				slice_support_list := s_nssai_amf.SliceSupportList
+				ran.Log.Info("---slice_support_list", slice_support_list)
 
-					for _, slice_supportlist_list := range s_nssai_amf.SliceSupportList.List {
-						slice_support_item_snssai := slice_supportlist_list.SNSSAI
-						ran.Log.Info("---SNSSAI: ", slice_support_item_snssai)
+				for _, slice_supportlist_list := range s_nssai_amf.SliceSupportList.List {
+					slice_support_item_snssai := slice_supportlist_list.SNSSAI
+					ran.Log.Info("---SNSSAI: ", slice_support_item_snssai)
 
-						slicesupplist_list_nssai := slice_supportlist_list.SNSSAI
-						snssai_sst_value := slicesupplist_list_nssai.SST
-						snssai_sd_value := slicesupplist_list_nssai.SD
-						ran.Log.Info("---SST: ", snssai_sst_value)
-						ran.Log.Info("---SD: ", snssai_sd_value)
+					slicesupplist_list_nssai := slice_supportlist_list.SNSSAI
+					snssai_sst_value := slicesupplist_list_nssai.SST
+					snssai_sd_value := slicesupplist_list_nssai.SD
+					ran.Log.Info("---SST: ", snssai_sst_value)
+					ran.Log.Info("---SD: ", snssai_sd_value)
 
-						// SD VALUE
-						sdvalue := snssai_sd_value.Value
-						ran.Log.Info("---SD from AMF: ", sdvalue)
+					// SD VALUE
+					sdvalue := snssai_sd_value.Value
+					ran.Log.Info("---SD from AMF: ", sdvalue)
 
-						sdlistcore = append(sdlistcore, sdvalue[0])
-						sdlistcore = append(sdlistcore, sdvalue[1])
-						sdlistcore = append(sdlistcore, sdvalue[2])
-						fmt.Println("sd value list from core: ", sdlistcore)
+					sdlistcore = append(sdlistcore, sdvalue[0])
+					sdlistcore = append(sdlistcore, sdvalue[1])
+					sdlistcore = append(sdlistcore, sdvalue[2])
+					fmt.Println("sd value list from core: ", sdlistcore)
 
-						// strsdvalue := fmt.Sprintf("%o%o%o", sdvalue[0], sdvalue[1], sdvalue[2])
-						// ran.Log.Info("---string value of SD from AMF:", strsdvalue)
+					// strsdvalue := fmt.Sprintf("%o%o%o", sdvalue[0], sdvalue[1], sdvalue[2])
+					// ran.Log.Info("---string value of SD from AMF:", strsdvalue)
 
-						// SST VALUE
-						sstvalue := snssai_sst_value.Value
-						ran.Log.Info("---SST from AMF: ", sstvalue)
+					// SST VALUE
+					sstvalue := snssai_sst_value.Value
+					ran.Log.Info("---SST from AMF: ", sstvalue)
 
-						strsstvalue := fmt.Sprintf("%o", sstvalue[0])
-						ran.Log.Info("---string value of SST from AMF:", strsstvalue)
+					strsstvalue := fmt.Sprintf("%o", sstvalue[0])
+					ran.Log.Info("---string value of SST from AMF:", strsstvalue)
 
-						intsstvalue, err := strconv.ParseInt(strsstvalue, 10, 32)
-						if err != nil {
-							ran.Log.Info("error in Parsing")
-						}
-						intsstcore = int32(intsstvalue)
-						ran.Log.Info("---Int32 value of sst SST from AMF: ", intsstcore)
-
-						if sstgnb == intsstcore {
-							ran.Log.Info("sst values are equal")
-						} else {
-							ran.Log.Info("sst values not equal")
-						}
-						if reflect.DeepEqual(sdlistgnb, sdlistcore) {
-							ran.Log.Info("sd values are equal")
-						} else {
-							ran.Log.Info("sd values not equal")
-						}
-						gnbslicelist = append(gnbslicelist, sstgnb, sdlistgnb)
-						amfslicelist = append(amfslicelist, intsstcore, sdlistcore)
+					intsstvalue, err := strconv.ParseInt(strsstvalue, 10, 32)
+					if err != nil {
+						ran.Log.Info("error in Parsing")
 					}
-				}
-			}
-		} else {
-			var flag1 bool
-			if sstgnb == intsstcore {
-				ran.Log.Info("sst values are equal")
-				flag1 = true
-			} else {
-				ran.Log.Info("sst values not equal")
-			}
-			if !flag1 {
-				ran.Log.Warn("NG-Setup failure: Wrong Sst value")
-				cause.Present = ngapType.CausePresentMisc
-				cause.Misc = &ngapType.CauseMisc{
-					Value: ngapType.CauseMiscPresentUnspecified,
+					intsstcore = int32(intsstvalue)
+					ran.Log.Info("---Int32 value of sst SST from AMF: ", intsstcore)
+
+					if sstgnb == intsstcore {
+						ran.Log.Info("sst values are equal")
+					} else {
+						ran.Log.Info("sst values not equal")
+					}
+					if reflect.DeepEqual(sdlistgnb, sdlistcore) {
+						ran.Log.Info("sd values are equal")
+					} else {
+						ran.Log.Info("sd values not equal")
+					}
+					gnbslicelist = append(gnbslicelist, sstgnb, sdlistgnb)
+					amfslicelist = append(amfslicelist, intsstcore, sdlistcore)
 				}
 			}
 		}
+		//} else {
+		// 	var flag1 bool
+		// 	if sstgnb == intsstcore {
+		// 		ran.Log.Info("sst values are equal")
+		// 		flag1 = true
+		// 	} else {
+		// 		ran.Log.Info("sst values not equal")
+		// 	}
+		// 	if !flag1 {
+		// 		ran.Log.Warn("NG-Setup failure: Wrong Sst value")
+		// 		cause.Present = ngapType.CausePresentMisc
+		// 		cause.Misc = &ngapType.CauseMisc{
+		// 			Value: ngapType.CauseMiscPresentUnspecified,
+		// 		}
+		// 	}
+		// }
 	}
 
 	if len(ran.SupportedTAList) == 0 {
