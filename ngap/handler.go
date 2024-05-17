@@ -831,12 +831,12 @@ func HandleNGSetupRequest(ran *context.AmfRan, message *ngapType.NGAPPDU) {
 
 		var flags bool
 		if context.Inslicelist(gnbslicelist, amfslicelist) {
-			ran.Log.Info("Slice values are equal")
+			ran.Log.Info("Slice values are equal ")
 			flags = true
 		}
 
 		if !found {
-			ran.Log.Warn("NG-Setup failure: Cannot find Served TAI in AMF")
+			ran.Log.Warn("NG-Setup failure: Cannot find Served TAI in AMF ")
 			cause.Present = ngapType.CausePresentMisc
 			cause.Misc = &ngapType.CauseMisc{
 				Value: ngapType.CauseMiscPresentUnknownPLMN,
@@ -844,7 +844,7 @@ func HandleNGSetupRequest(ran *context.AmfRan, message *ngapType.NGAPPDU) {
 		}
 
 		if !flags {
-			ran.Log.Warn("NG-Setup failure: Wrong Slice values")
+			ran.Log.Warn("NG-Setup failure: Wrong Slice values ")
 			cause.Present = ngapType.CausePresentMisc
 			cause.Misc = &ngapType.CauseMisc{
 				Value: ngapType.CauseMiscPresentUnknownPLMN,
