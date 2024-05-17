@@ -27,10 +27,10 @@ jobs:
           
          
       - name: run go clean commands
-        run: go clean -modcache-go@v5
+        run: go clean -modcache
 
       - name: run go tidy command
-        run: go mod tidy-go@v5
+        run: go mod tidy
           
 
       - name: golangci-lint
