@@ -24,15 +24,7 @@ jobs:
       - uses: actions/setup-go@v5
         with:
           go-version-file: 'go.mod'
-          
-         
-      - name: run go clean commands
-        run: go clean -modcache
-
-     # - name: run go tidy command
-       # run: go mod tidy
-          
-
+        
       - name: golangci-lint
         uses: golangci/golangci-lint-action@v4.0.0
         with:
@@ -81,7 +73,11 @@ jobs:
       - uses: actions/setup-go@v5
         with:
           go-version-file: 'go.mod'
+      - name: run go clean commands
+        run: go clean -modcache
 
+      - name: run go tidy command
+        run: go mod tidy
       - name: Unit tests
         run: go test ./...
         
