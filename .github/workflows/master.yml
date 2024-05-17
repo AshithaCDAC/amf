@@ -26,7 +26,7 @@ jobs:
           go-version-file: 'go.mod'
           
       - name: run go help clean command
-        run:  go help clean-go@v5
+        run:  go help-go@v5
           
          
       - name: run go clean commands
