@@ -24,6 +24,8 @@ jobs:
       - uses: actions/setup-go@v5
         with:
           go-version-file: 'go.mod'
+      - name: Clean Checksum
+        run: go mod tidy 
         
       #- name: golangci-lint
         #uses: golangci/golangci-lint-action@v4.0.0
@@ -60,6 +62,8 @@ jobs:
       - uses: actions/setup-go@v5
         with:
           go-version-file: 'go.mod'
+      - name: Clean Checksum
+        run: go mod tidy 
 
       - name: Build
         run: go build
@@ -73,6 +77,8 @@ jobs:
       - uses: actions/setup-go@v5
         with:
           go-version-file: 'go.mod'
+      - name: Clean Checksum
+        run: go mod tidy 
       - name: run go clean commands
         run: go clean -modcache
 
